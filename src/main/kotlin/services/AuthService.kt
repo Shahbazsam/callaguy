@@ -31,6 +31,8 @@ class  AuthServiceImpl(
         )
     }
 
+
+
     override suspend fun authenticate(credentials : LoginRequest) : String {
         val user = userRepository.findByEmail(credentials.email)
             ?: throw AppException.UnauthorizedException("Invalid Credentials")
