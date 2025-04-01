@@ -31,10 +31,9 @@ fun Route.authRoutes(
         }
         post("/login") {
             val credentials = call.receive<LoginRequest>()
-            println("credentials : $credentials")
+
             try {
                 val token = authService.authenticate(credentials)
-                println("token : $token")
                 call.respond(
                     status = HttpStatusCode.OK,
                     message = AuthResponse(

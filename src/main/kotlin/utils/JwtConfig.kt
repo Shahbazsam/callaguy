@@ -16,27 +16,31 @@ class JwtConfig() {
         }
     }
 
-    private val secret  = System.getenv("JWR_SECRET")
     private val issuer = config.property("jwt.issuer").getString()
     private val audience = config.property("jwt.audience").getString()
     private val validityInMs = 36_000_000L * 24 * 365
 
     fun generateToken(userId : Int , role : String) : String {
+
         return JWT.create()
             .withIssuer(issuer)
             .withAudience(audience)
             .withClaim("userId" , userId)
             .withClaim("role" , role)
             .withExpiresAt(getExpiration())
-            .sign(Algorithm.HMAC256(secret))
+            .sign(Algorithm.HMAC256(getSecret()))
     }
 
     fun getVerifier() : JWTVerifier {
-        return JWT.require(Algorithm.HMAC256(secret))
+        return JWT.require(Algorithm.HMAC256(getSecret()))
             .withIssuer(issuer)
             .withAudience(audience)
             .build()
     }
+    private fun getSecret(): String {
+        return System.getenv("JWT_SECRET") ?: throw IllegalStateException("JWT_SECRET is not set")
+    }
+
 
     fun decodeToken(token : String) : DecodedJWT {
         return getVerifier().verify(token.replace("Bearer ", ""))

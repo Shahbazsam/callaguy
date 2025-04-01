@@ -16,6 +16,7 @@ class PasswordUtils {
         require(password.isNotEmpty() && hash.isNotEmpty()){
             "password and hash cannot be empty"
         }
+        println("password :" + BCrypt.checkpw(password , hash))
         return BCrypt.checkpw(password , hash)
     }
 }
