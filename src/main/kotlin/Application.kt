@@ -24,6 +24,7 @@ fun Application.module() {
         expiresAt = 365L * 1000L * 60L * 60L * 24L,
     )
 
+
     JwtConfig.init(environment.config)
 
 
