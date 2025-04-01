@@ -9,6 +9,7 @@ import io.ktor.http.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import kotlin.math.log
 
 
 fun Route.authRoutes(
@@ -16,6 +17,7 @@ fun Route.authRoutes(
 ) {
     route("/auth") {
         post("/register") {
+
             val request = call.receive<RegisterRequest>()
             val success = authService.registerUser(request)
             if (success) {
@@ -29,8 +31,10 @@ fun Route.authRoutes(
         }
         post("/login") {
             val credentials = call.receive<LoginRequest>()
+            println("credentials : $credentials")
             try {
                 val token = authService.authenticate(credentials)
+                println("token : $token")
                 call.respond(
                     status = HttpStatusCode.OK,
                     message = AuthResponse(
@@ -43,7 +47,6 @@ fun Route.authRoutes(
                     message = mapOf("code" to e.code, "message" to e.message)
                 )
             }catch (e: Exception) {
-
                 call.respond(HttpStatusCode.InternalServerError, mapOf("code" to "INTERNAL_ERROR", "message" to "An unexpected error occurred"))
             }
         }

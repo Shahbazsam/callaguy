@@ -7,17 +7,19 @@ import com.auth0.jwt.interfaces.DecodedJWT
 import io.ktor.server.config.*
 import java.util.Date
 
-object JwtConfig {
-    private lateinit var secret : String
-    private lateinit var issuer : String
-    private lateinit var audience : String
-    private const val validityInMs = 36_000_000L * 24 * 365
+class JwtConfig() {
 
-    fun init(config : ApplicationConfig) {
-        secret = System.getenv("JWT_SECRET")
-        issuer = config.property("jwt.issuer").getString()
-        audience = config.property("jwt.audience").toString()
+    companion object {
+        lateinit var config : ApplicationConfig
+        fun init(config : ApplicationConfig) {
+            this.config = config
+        }
     }
+
+    private val secret  = System.getenv("JWR_SECRET")
+    private val issuer = config.property("jwt.issuer").getString()
+    private val audience = config.property("jwt.audience").getString()
+    private val validityInMs = 36_000_000L * 24 * 365
 
     fun generateToken(userId : Int , role : String) : String {
         return JWT.create()

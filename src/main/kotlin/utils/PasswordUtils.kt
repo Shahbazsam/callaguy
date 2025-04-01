@@ -2,8 +2,8 @@ package com.utils
 
 import org.mindrot.jbcrypt.BCrypt
 
-object PasswordUtils {
-    private const val BCRYPT_ROUNDS = 12
+class PasswordUtils {
+    private val BCRYPT_ROUNDS = 12
 
     fun hash(password : String) : String {
         require(password.isNotEmpty()) {

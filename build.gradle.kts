@@ -49,5 +49,9 @@ dependencies {
     //BCrypt
     implementation("org.mindrot:jbcrypt:0.4")
 
+    implementation("io.insert-koin:koin-ktor:4.0.3")
+    implementation("io.insert-koin:koin-logger-slf4j:4.0.3")
+
+    implementation("io.ktor:ktor-server-call-logging:3.1.1")
 
 }

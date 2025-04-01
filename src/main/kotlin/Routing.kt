@@ -17,6 +17,5 @@ fun Application.configureRouting(
 ) {
     routing {
         authRoutes(authService)
-
     }
 }

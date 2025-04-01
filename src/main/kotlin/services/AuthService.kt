@@ -13,10 +13,11 @@ interface AuthService {
 }
 
 class  AuthServiceImpl(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val passwordUtil : PasswordUtils,
+    private val jwtConfig: JwtConfig
 ) : AuthService {
-    private val passwordUtil = PasswordUtils
-    private val jwtConfig = JwtConfig
+
     override suspend fun registerUser(request: RegisterRequest) : Boolean {
         if (userRepository.findByEmail(request.email) != null) {
             throw AppException.ConflictException("Email already registered")
