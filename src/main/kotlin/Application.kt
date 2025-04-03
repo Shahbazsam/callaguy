@@ -6,6 +6,7 @@ import com.di.appModule
 import com.repository.UserRepositoryImpl
 import com.services.AuthService
 import com.services.AuthServiceImpl
+import com.services.ServiceService
 import com.token.TokenConfig
 import com.utils.JwtConfig
 import io.ktor.server.application.*
@@ -31,12 +32,16 @@ fun Application.module() {
     install(Koin){
         modules(appModule)
     }
-    val service by inject<AuthService>()
+    val authService by inject<AuthService>()
+    val serviceService by inject<ServiceService>()
 
     configureAuth(tokenConfig)
     configureSerialization()
     configureDatabases()
     configureHTTP()
-    configureRouting(service)
+    configureRouting(
+        authService =  authService ,
+        serviceService = serviceService
+    )
     configureMonitoring()
 }

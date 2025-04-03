@@ -12,11 +12,10 @@ object SubServices : IntIdTable("sub_services") {
     val visitCharge = decimal("visit_Charge" , 10 ,2)
     val isSubscription = bool("is_subscription").default(false)
     val subscriptionDuration = integer("subscription_duration").nullable()
-
 }
 
 class SubServiceEntity(id : EntityID<Int>) : IntEntity(id) {
-    companion object : IntEntityClass<ServiceEntity>(SubServices)
+    companion object : IntEntityClass<SubServiceEntity>(SubServices)
     var serviceId by SubServices.serviceId
     var name by SubServices.name
     var basePrice by SubServices.basePrice
