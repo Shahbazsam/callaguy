@@ -1,16 +1,12 @@
 package com
 
-import com.configuration.DatabaseFactory
 import com.configuration.configureAuth
 import com.di.appModule
-import com.repository.UserRepositoryImpl
-import com.services.AuthService
-import com.services.AuthServiceImpl
+import com.services.CustomerAuthService
 import com.services.ServiceService
 import com.token.TokenConfig
 import com.utils.JwtConfig
 import io.ktor.server.application.*
-import org.koin.ktor.ext.get
 import org.koin.ktor.ext.inject
 import org.koin.ktor.plugin.Koin
 
@@ -32,7 +28,7 @@ fun Application.module() {
     install(Koin){
         modules(appModule)
     }
-    val authService by inject<AuthService>()
+    val authService by inject<CustomerAuthService>()
     val serviceService by inject<ServiceService>()
 
     configureAuth(tokenConfig)
@@ -40,7 +36,7 @@ fun Application.module() {
     configureDatabases()
     configureHTTP()
     configureRouting(
-        authService =  authService ,
+        customerAuthService =  authService ,
         serviceService = serviceService
     )
     configureMonitoring()

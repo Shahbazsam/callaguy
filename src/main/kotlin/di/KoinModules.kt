@@ -1,10 +1,7 @@
 package com.di
 
 import com.repository.*
-import com.services.AuthService
-import com.services.AuthServiceImpl
-import com.services.ServiceService
-import com.services.ServiceServiceImpl
+import com.services.*
 import com.utils.JwtConfig
 import com.utils.PasswordUtils
 import org.koin.dsl.module
@@ -16,12 +13,12 @@ val appModule  = module {
     single { JwtConfig() }
 
     //Repo
-    single<UserRepository> { UserRepositoryImpl() }
+    single<CustomerRepository> { CustomerRepositoryImpl() }
     single<ServiceRepository> { ServiceRepositoryImpl() }
     single<SubServiceRepository> { SubServiceRepositoryImpl() }
 
     //Service
-    single<AuthService> { AuthServiceImpl(get() , get() , get()) }
+    single<CustomerAuthService> { CustomerAuthServiceImpl(get() , get() , get()) }
     single<ServiceService> { ServiceServiceImpl(get() , get())  }
 
 }

@@ -1,13 +1,13 @@
 package com.repository
 
-import com.entities.UserEntity
-import com.entities.Users
+import com.entities.CustomerEntity
+import com.entities.Customers
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 
-interface UserRepository {
-    suspend fun findByEmail(email : String) : UserEntity?
-    suspend fun findById( userId : Int) : UserEntity?
+interface CustomerRepository {
+    suspend fun findByEmail(email : String) : CustomerEntity?
+    suspend fun findById( userId : Int) : CustomerEntity?
     suspend fun createUser(
         userName : String,
         email: String,
@@ -18,16 +18,16 @@ interface UserRepository {
     ): Boolean
 }
 
-class UserRepositoryImpl : UserRepository {
-    override suspend fun findByEmail(email: String): UserEntity? {
+class CustomerRepositoryImpl : CustomerRepository {
+    override suspend fun findByEmail(email: String): CustomerEntity? {
         return transaction {
-            UserEntity.find(Users.email eq email ).firstOrNull()
+            CustomerEntity.find(Customers.email eq email ).firstOrNull()
         }
     }
 
-    override suspend fun findById(userId: Int): UserEntity? {
+    override suspend fun findById(userId: Int): CustomerEntity? {
         return transaction {
-            UserEntity.findById(userId)
+            CustomerEntity.findById(userId)
         }
     }
 
@@ -41,7 +41,7 @@ class UserRepositoryImpl : UserRepository {
     ) : Boolean {
         try {
             transaction {
-                UserEntity.new {
+                CustomerEntity.new {
                     this.userName = userName
                     this.email = email
                     this.passwordHash = password

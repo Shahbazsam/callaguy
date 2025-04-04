@@ -4,22 +4,21 @@ import com.dtos.requests.auth.LoginRequest
 import com.dtos.requests.auth.RegisterRequest
 import com.dtos.response.auth.AuthResponse
 import com.exceptions.AppException
-import com.services.AuthService
+import com.services.CustomerAuthService
 import io.ktor.http.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import kotlin.math.log
 
 
 fun Route.authRoutes(
-    authService: AuthService
+    authService: CustomerAuthService
 ) {
     route("/auth") {
         post("/register") {
 
             val request = call.receive<RegisterRequest>()
-            val success = authService.registerUser(request)
+            val success = authService.registerCustomer(request)
             if (success) {
                 call.respond(
                    status =  HttpStatusCode.OK ,

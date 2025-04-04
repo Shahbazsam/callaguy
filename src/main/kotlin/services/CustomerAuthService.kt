@@ -3,26 +3,26 @@ package com.services
 import com.dtos.requests.auth.LoginRequest
 import com.dtos.requests.auth.RegisterRequest
 import com.exceptions.AppException
-import com.repository.UserRepository
+import com.repository.CustomerRepository
 import com.utils.JwtConfig
 import com.utils.PasswordUtils
 
-interface AuthService {
-    suspend fun registerUser(request: RegisterRequest) : Boolean
+interface CustomerAuthService {
+    suspend fun registerCustomer(request: RegisterRequest) : Boolean
     suspend fun authenticate(credentials : LoginRequest) : String
 }
 
-class  AuthServiceImpl(
-    private val userRepository: UserRepository,
+class  CustomerAuthServiceImpl(
+    private val customerRepository: CustomerRepository,
     private val passwordUtil : PasswordUtils,
     private val jwtConfig: JwtConfig
-) : AuthService {
+) : CustomerAuthService {
 
-    override suspend fun registerUser(request: RegisterRequest) : Boolean {
-        if (userRepository.findByEmail(request.email) != null) {
+    override suspend fun registerCustomer(request: RegisterRequest) : Boolean {
+        if (customerRepository.findByEmail(request.email) != null) {
             throw AppException.ConflictException("Email already registered")
         }
-        return userRepository.createUser(
+        return customerRepository.createUser(
             userName = request.userName,
             email = request.email,
             password = passwordUtil.hash(password = request.password),
@@ -32,10 +32,8 @@ class  AuthServiceImpl(
         )
     }
 
-
-
     override suspend fun authenticate(credentials : LoginRequest) : String {
-        val user = userRepository.findByEmail(credentials.email)
+        val user = customerRepository.findByEmail(credentials.email)
             ?: throw AppException.UnauthorizedException("Invalid Credentials")
         if(!passwordUtil.verify(password = credentials.password , hash = user.passwordHash)) {
             throw AppException.UnauthorizedException("Invalid Credentials")
