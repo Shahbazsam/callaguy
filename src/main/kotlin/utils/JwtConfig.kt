@@ -18,7 +18,7 @@ class JwtConfig() {
 
     private val issuer = config.property("jwt.issuer").getString()
     private val audience = config.property("jwt.audience").getString()
-    private val validityInMs = 36_000_000L * 24 * 365
+    private val validityInMs = 365L * 1000L * 60L * 60L * 24L
 
     fun generateToken(userId : Int , role : String) : String {
 

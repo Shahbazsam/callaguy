@@ -3,6 +3,7 @@ package com
 import com.configuration.configureAuth
 import com.di.appModule
 import com.services.CustomerAuthService
+import com.services.ProfessionalAuthService
 import com.services.ServiceService
 import com.token.TokenConfig
 import com.utils.JwtConfig
@@ -19,6 +20,7 @@ fun Application.module() {
         issuer = environment.config.property("jwt.issuer").getString(),
         audience = environment.config.property("jwt.audience").getString(),
         expiresAt = 365L * 1000L * 60L * 60L * 24L,
+        secret = System.getenv("JWT_SECRET")
     )
 
 
@@ -28,7 +30,8 @@ fun Application.module() {
     install(Koin){
         modules(appModule)
     }
-    val authService by inject<CustomerAuthService>()
+    val customerAuthService by inject<CustomerAuthService>()
+    val professionalAuthService by inject<ProfessionalAuthService>()
     val serviceService by inject<ServiceService>()
 
     configureAuth(tokenConfig)
@@ -36,7 +39,8 @@ fun Application.module() {
     configureDatabases()
     configureHTTP()
     configureRouting(
-        customerAuthService =  authService ,
+        customerAuthService = customerAuthService,
+        professionalAuthService = professionalAuthService,
         serviceService = serviceService
     )
     configureMonitoring()

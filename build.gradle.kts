@@ -17,6 +17,7 @@ application {
 
 repositories {
     mavenCentral()
+
 }
 
 dependencies {
@@ -28,6 +29,7 @@ dependencies {
     implementation("org.postgresql:postgresql:42.7.4")
     implementation("com.zaxxer:HikariCP:6.2.0")
     implementation("org.jetbrains.exposed:exposed-dao:0.60.0")
+    implementation("org.jetbrains.exposed:exposed-java-time:0.60.0")
     implementation("io.ktor:ktor-server-config-yaml:3.1.1")
     implementation(libs.h2)
     implementation(libs.ktor.server.swagger)

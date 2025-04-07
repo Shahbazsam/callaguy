@@ -14,11 +14,13 @@ val appModule  = module {
 
     //Repo
     single<CustomerRepository> { CustomerRepositoryImpl() }
+    single<ProfessionalRepository>{ ProfessionalRepositoryImpl() }
     single<ServiceRepository> { ServiceRepositoryImpl() }
     single<SubServiceRepository> { SubServiceRepositoryImpl() }
 
     //Service
     single<CustomerAuthService> { CustomerAuthServiceImpl(get() , get() , get()) }
+    single<ProfessionalAuthService> {ProfessionalAuthServiceImpl(get(), get() , get())  }
     single<ServiceService> { ServiceServiceImpl(get() , get())  }
 
 }

@@ -11,3 +11,14 @@ data class RegisterRequest(
     val phone : String,
     val address : String
 )
+
+
+@Serializable
+data class ProfessionalRegisterRequest(
+    val userName: String,
+    val email : String,
+    val password: String,
+    val experience : Int,
+    val documents : ByteArray,
+    val serviceId : List<Int>
+)
