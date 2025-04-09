@@ -2,6 +2,7 @@ package com
 
 import com.configuration.configureAuth
 import com.di.appModule
+import com.exceptions.configureExceptionHandling
 import com.services.CustomerAuthService
 import com.services.ProfessionalAuthService
 import com.services.ServiceService
@@ -35,6 +36,7 @@ fun Application.module() {
     val serviceService by inject<ServiceService>()
 
     configureAuth(tokenConfig)
+    configureExceptionHandling()
     configureSerialization()
     configureDatabases()
     configureHTTP()

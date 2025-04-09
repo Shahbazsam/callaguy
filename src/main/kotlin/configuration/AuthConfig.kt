@@ -13,7 +13,7 @@ fun Application.configureAuth(config : TokenConfig) {
         jwt("auth_jwt") {
             realm = "Call A Guy"
             verifier(
-                JWT.require(Algorithm.HMAC256())
+                JWT.require(Algorithm.HMAC256(config.secret))
                     .withIssuer(config.issuer)
                     .withAudience(config.audience)
                     .build()

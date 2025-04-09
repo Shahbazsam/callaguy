@@ -18,7 +18,7 @@ interface ServiceRequestRepository {
         specialInstruction :String ?
     ) :Boolean
 
-    suspend fun getRequestedServiceRequestsForProfessional(professionalId : Int) : List<ServiceRequestEntity>
+    suspend fun getRequestedServiceRequestsForProfessional(professionalId : Int) : List<ServiceRequestEntity>?
     suspend fun acceptServiceRequest(professionalId: Int , requestId : Int ) :Boolean
     suspend fun updateRequestStatus(requestId: Int , newStatus : ServiceRequestStatus) : Boolean
     suspend fun getServiceRequestByCustomer(customerId: Int) : List<ServiceRequestEntity>?
@@ -52,7 +52,7 @@ class ServiceRequestRepositoryImpl : ServiceRequestRepository {
         }
     }
 
-    override suspend fun getRequestedServiceRequestsForProfessional(professionalId: Int): List<ServiceRequestEntity> {
+    override suspend fun getRequestedServiceRequestsForProfessional(professionalId: Int): List<ServiceRequestEntity>? {
         try {
             return transaction {
                 val offeredServices = ProfessionalEntity[professionalId].services.map { it.id.value }
@@ -70,18 +70,60 @@ class ServiceRequestRepositoryImpl : ServiceRequestRepository {
     }
 
     override suspend fun acceptServiceRequest(professionalId: Int, requestId: Int): Boolean {
-        TODO("Not yet implemented")
+        return try {
+            transaction {
+                val request = ServiceRequestEntity.findById(requestId)
+                val professional = ProfessionalEntity.findById(professionalId)
+                if (request != null && professional != null && request.status == ServiceRequestStatus.REQUESTED && professional.services.map { it.id.value }.contains(request.subService.serviceId.value)) {
+
+                    request.status = ServiceRequestStatus.ACCEPTED
+                    request.professional = professional
+                    true
+                }else {
+                    false
+                }
+            }
+        }catch (e : Exception) {
+            throw AppException.ForbiddenException()
+        }
     }
 
     override suspend fun updateRequestStatus(requestId: Int, newStatus: ServiceRequestStatus): Boolean {
-        TODO("Not yet implemented")
+        return try {
+            transaction {
+                val request = ServiceRequestEntity.findById(requestId)
+                if (request != null ) {
+                    request.status = newStatus
+                    true
+                }else {
+                    false
+                }
+            }
+        }catch (e : Exception) {
+            throw AppException.ForbiddenException()
+        }
     }
 
     override suspend fun getServiceRequestByCustomer(customerId: Int): List<ServiceRequestEntity>? {
-        TODO("Not yet implemented")
+        return try {
+            transaction {
+                ServiceRequestEntity.find {
+                    ServiceRequests.customer eq customerId
+                }.toList()
+            }
+        } catch (e : Exception) {
+            throw AppException.InternalServerError()
+        }
+
     }
 
     override suspend fun getServiceRequestById(requestId: Int): ServiceRequestEntity? {
-        TODO("Not yet implemented")
+        return try {
+            transaction {
+                ServiceRequestEntity.findById(requestId)
+            }
+        }catch (e :Exception) {
+            throw AppException.InternalServerError()
+        }
     }
 }
