@@ -17,10 +17,16 @@ val appModule  = module {
     single<ProfessionalRepository>{ ProfessionalRepositoryImpl() }
     single<ServiceRepository> { ServiceRepositoryImpl() }
     single<SubServiceRepository> { SubServiceRepositoryImpl() }
+    single<ServiceRequestRepository> { ServiceRequestRepositoryImpl() }
+    single<SupportMessageRepository>{ SupportMessageRepositoryImpl() }
+    single<SupportTicketRepository> { SupportTicketRepositoryImpl() }
 
     //Service
     single<CustomerAuthService> { CustomerAuthServiceImpl(get() , get() , get()) }
     single<ProfessionalAuthService> {ProfessionalAuthServiceImpl(get(), get() , get())  }
     single<ServiceService> { ServiceServiceImpl(get() , get())  }
+    single<ServiceRequestService> { ServiceRequestServiceImpl(get()) }
+    single<SupportMessageServices> { SupportMessageServicesImpl(get()) }
+    single<SupportTicketService> { SupportTicketServiceImpl(get()) }
 
 }

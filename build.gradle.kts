@@ -24,6 +24,7 @@ dependencies {
     implementation(libs.ktor.server.core)
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.ktor.server.content.negotiation)
+    implementation("io.ktor:ktor-server-auth-jwt:3.1.1")
     implementation(libs.exposed.core)
     implementation(libs.exposed.jdbc)
     implementation("org.postgresql:postgresql:42.7.4")
@@ -38,12 +39,6 @@ dependencies {
     implementation(libs.ktor.server.config.yaml)
     testImplementation(libs.ktor.server.test.host)
     testImplementation(libs.kotlin.test.junit)
-
-
-    implementation("io.ktor:ktor-server-auth-jwt:3.1.1")
-
-    // Swagger
-    implementation("io.github.smiley4:ktor-swagger-ui:2.8.0")
 
     // Logging
     implementation("ch.qos.logback:logback-classic:1.4.7")

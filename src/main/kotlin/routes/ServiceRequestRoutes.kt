@@ -19,7 +19,7 @@ fun Route.customerServiceRequestsRoutes(
         authenticate("auth_jwt") {
             post("create") {
                 val principal = call.principal<JWTPrincipal>()
-                val id = principal?.getClaim("id", Int::class)
+                val id = principal?.getClaim("userId", Int::class)
                 val role = principal?.getClaim("role" , String::class)
 
                 if (role != "customer") throw AppException.ForbiddenException()
@@ -34,10 +34,10 @@ fun Route.customerServiceRequestsRoutes(
             }
             get {
                 val principal = call.principal<JWTPrincipal>()
-                val id = principal?.getClaim("id" , Int::class)
+                val id = principal?.getClaim("userId" , Int::class)
                 val role = principal?.getClaim("role" , String::class)
 
-                if (role != "customers") throw AppException.ForbiddenException()
+                if (role != "customer") throw AppException.ForbiddenException()
 
                 try {
                     val responseData = service.getForCustomer(id!!) ?: emptyList()
@@ -52,7 +52,7 @@ fun Route.customerServiceRequestsRoutes(
                 val principal = call.principal<JWTPrincipal>()
                 val role = principal?.getClaim("role" , String::class)
 
-                if (role != "customers") throw AppException.ForbiddenException()
+                if (role != "customer") throw AppException.ForbiddenException()
 
                 try {
                     val data = service.getById(requestId) ?: throw AppException.NotFoundException("Service Request Not Found" , requestId)
@@ -72,7 +72,7 @@ fun Route.professionalServiceRequestsRoute(
         authenticate("auth_jwt") {
             get {
                 val principal = call.principal<JWTPrincipal>()
-                val id = principal?.getClaim("id" , Int::class)
+                val id = principal?.getClaim("userId" , Int::class)
                 val role = principal?.getClaim("role" , String::class)
 
                 if (role != "professional") throw AppException.ForbiddenException()
@@ -87,7 +87,7 @@ fun Route.professionalServiceRequestsRoute(
             post("/accept") {
                 val data = call.receive<AcceptServiceRequestDto>()
                 val principal = call.principal<JWTPrincipal>()
-                val id = principal?.getClaim("id" , Int::class)
+                val id = principal?.getClaim("userId" , Int::class)
                 val role = principal?.getClaim("role" , String::class)
 
                 if (role != "professional") throw AppException.ForbiddenException()

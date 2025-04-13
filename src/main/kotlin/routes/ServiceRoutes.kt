@@ -11,7 +11,7 @@ fun Route.serviceRoutes(
     serviceService: ServiceService
 ) {
     route("/services"){
-        authenticate("auth-jwt") {
+        authenticate("auth_jwt") {
             get {
                 try {
                     val services = serviceService.getAllServices()

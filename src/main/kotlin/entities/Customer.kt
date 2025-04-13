@@ -22,5 +22,4 @@ class CustomerEntity(id : EntityID<Int>) : IntEntity(id) {
     var type by Customers.type
     var address by Customers.address
     var phone by Customers.phone
-
 }

@@ -1,6 +1,6 @@
 package com.configuration
 
-import com.entities.Users
+import com.entities.Customers
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import org.jetbrains.exposed.sql.Database
@@ -22,13 +22,14 @@ object DatabaseFactory {
 
         transaction {
             SchemaUtils.createMissingTablesAndColumns(
-                Users,
+                Customers,
                 /*Services,
                 SubServices,
                 ServiceRequests,
                 Payments*/
             )
         }
+
     }
 }
 

@@ -3,9 +3,7 @@ package com
 import com.configuration.configureAuth
 import com.di.appModule
 import com.exceptions.configureExceptionHandling
-import com.services.CustomerAuthService
-import com.services.ProfessionalAuthService
-import com.services.ServiceService
+import com.services.*
 import com.token.TokenConfig
 import com.utils.JwtConfig
 import io.ktor.server.application.*
@@ -34,16 +32,23 @@ fun Application.module() {
     val customerAuthService by inject<CustomerAuthService>()
     val professionalAuthService by inject<ProfessionalAuthService>()
     val serviceService by inject<ServiceService>()
+    val serviceRequest by inject<ServiceRequestService>()
+    val supportTicket by inject<SupportTicketService>()
+    val supportMessage by inject<SupportMessageServices>()
 
     configureAuth(tokenConfig)
     configureExceptionHandling()
     configureSerialization()
+    configureSwagger()
     configureDatabases()
     configureHTTP()
     configureRouting(
         customerAuthService = customerAuthService,
         professionalAuthService = professionalAuthService,
-        serviceService = serviceService
+        serviceService = serviceService,
+        serviceRequest = serviceRequest,
+        supportTicket = supportTicket,
+        supportMessage = supportMessage
     )
     configureMonitoring()
 }
