@@ -2,7 +2,6 @@ package com.services
 
 import com.dtos.requests.serviceRequest.CreateServiceRequestDto
 import com.dtos.response.serviceRequest.ResponseServiceRequestEntityDto
-import com.entities.ServiceRequestEntity
 import com.entities.ServiceRequestStatus
 import com.repository.ServiceRequestRepository
 
