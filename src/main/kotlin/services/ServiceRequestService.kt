@@ -31,9 +31,12 @@ class ServiceRequestServiceImpl(
     override suspend fun getForCustomer(customerId: Int): List<ResponseServiceRequestEntityDto>? {
         return repository.getServiceRequestByCustomer(customerId)?.map { request ->
             ResponseServiceRequestEntityDto(
+                id = request.id.value,
                 customerId = request.customer.id.value,
                 professionalId = request.professional?.id?.value ,
+                amount = request.subService.basePrice,
                 subService = request.subService.name,
+                subServiceId = request.subService.id.value,
                 status = request.status,
                 preferredDate = request.preferredDate,
                 preferredTime = request.preferredTime,
@@ -47,9 +50,12 @@ class ServiceRequestServiceImpl(
     override suspend fun getForProfessional(professionalId: Int): List<ResponseServiceRequestEntityDto>? {
         return repository.getRequestedServiceRequestsForProfessional(professionalId)?.map { request ->
             ResponseServiceRequestEntityDto(
+                id = request.id.value,
                 customerId = request.customer.id.value,
                 professionalId = request.professional?.id?.value ,
+                amount = request.subService.basePrice,
                 subService = request.subService.name,
+                subServiceId = request.subService.id.value,
                 status = request.status,
                 preferredDate = request.preferredDate,
                 preferredTime = request.preferredTime,
@@ -72,9 +78,12 @@ class ServiceRequestServiceImpl(
         val entity = repository.getServiceRequestById(requestId)
         return entity?.let { request ->
             ResponseServiceRequestEntityDto(
+                id = request.id.value,
                 customerId = request.customer.id.value,
                 professionalId = request.professional?.id?.value ,
+                amount = request.subService.basePrice,
                 subService = request.subService.name,
+                subServiceId = request.subService.id.value,
                 status = request.status,
                 preferredDate = request.preferredDate,
                 preferredTime = request.preferredTime,
