@@ -23,10 +23,11 @@ fun Route.supportMessageRoutes(
 
                 val body = call.receive<SupportMessageRequestDto>()
                 try {
-                    service.createMessage(request = body , role = role)
+                    val success = service.createMessage(request = body , role = role)
+                    if (!success) throw AppException.BadRequestException("Message Not Sent")
                     call.respond(HttpStatusCode.OK)
                 }catch (e : Exception) {
-                    throw e
+                    throw AppException.InternalServerError()
                 }
             }
             get("{id}") {
@@ -37,7 +38,7 @@ fun Route.supportMessageRoutes(
                     val response = service.getMessages(ticketId = id) ?: emptyList()
                     call.respond(HttpStatusCode.OK , response)
                 } catch (e : Exception) {
-                    throw e
+                    throw AppException.InternalServerError()
                 }
             }
         }

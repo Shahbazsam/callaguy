@@ -29,8 +29,6 @@ fun Route.serviceRoutes(
 
                     val services = serviceService.getSubServicesById(serviceId)
                     call.respond(HttpStatusCode.OK , services)
-                } catch (e : AppException) {
-                    throw e
                 } catch (e : Exception) {
                     throw AppException.InternalServerError()
                 }

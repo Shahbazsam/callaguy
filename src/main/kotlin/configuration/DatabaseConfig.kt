@@ -1,14 +1,18 @@
 package com.configuration
 
-import com.entities.Customers
+import com.entities.*
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
+import org.flywaydb.core.Flyway
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 
 object DatabaseFactory {
     fun init() {
+
+        //migrateDataBase()
+
        val config = HikariConfig().apply {
            jdbcUrl = "jdbc:postgresql://localhost:5432/CallAGuy"
            driverClassName = "org.postgresql.Driver"
@@ -23,13 +27,24 @@ object DatabaseFactory {
         transaction {
             SchemaUtils.createMissingTablesAndColumns(
                 Customers,
-                /*Services,
+                Professionals,
+                Services,
                 SubServices,
                 ServiceRequests,
-                Payments*/
+                SupportMessages,
+                SupportTickets,
+                Payments,
             )
         }
 
+    }
+    private fun migrateDataBase() {
+        val flyway = Flyway.configure()
+            .dataSource("jdbc:postgresql://localhost:5432/CallAGuy", "postgres", "1234")
+            .locations("classpath:db/migration")
+            .load()
+
+        flyway.migrate()
     }
 }
 

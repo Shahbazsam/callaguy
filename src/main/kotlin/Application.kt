@@ -21,11 +21,7 @@ fun Application.module() {
         expiresAt = 365L * 1000L * 60L * 60L * 24L,
         secret = System.getenv("JWT_SECRET")
     )
-
-
     JwtConfig.init(environment.config)
-
-
     install(Koin){
         modules(appModule)
     }
@@ -35,6 +31,7 @@ fun Application.module() {
     val serviceRequest by inject<ServiceRequestService>()
     val supportTicket by inject<SupportTicketService>()
     val supportMessage by inject<SupportMessageServices>()
+    val payment by inject<PaymentService>()
 
     configureAuth(tokenConfig)
     configureExceptionHandling()
@@ -48,7 +45,8 @@ fun Application.module() {
         serviceService = serviceService,
         serviceRequest = serviceRequest,
         supportTicket = supportTicket,
-        supportMessage = supportMessage
+        supportMessage = supportMessage,
+        payment = payment
     )
     configureMonitoring()
 }

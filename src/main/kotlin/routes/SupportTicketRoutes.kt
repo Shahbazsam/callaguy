@@ -24,10 +24,12 @@ fun Route.supportTicketRoutes(
                 if (role != "customer" || id == null) throw AppException.ForbiddenException()
                 val body = call.receive<SupportTicketRequestDto>()
                 try {
-                    service.createTicket(customerId = id, request = body)
+                    val success = service.createTicket(customerId = id, request = body)
+                    if (!success) throw AppException.BadRequestException("Ticket could Not Be Created")
+
                     call.respond(HttpStatusCode.OK , "Support Ticket Created Successfully")
                 } catch (e : Exception) {
-                    throw e
+                    throw AppException.InternalServerError()
                 }
             }
             get("/customer_tickets") {
@@ -40,7 +42,7 @@ fun Route.supportTicketRoutes(
                     val response = service.customersTickets(id) ?: emptyList()
                     call.respond(HttpStatusCode.OK , response)
                 }catch (e : Exception ) {
-                    throw e
+                    throw AppException.InternalServerError()
                 }
             }
             post("update_status") {
@@ -52,10 +54,11 @@ fun Route.supportTicketRoutes(
 
                 try {
                     val body = call.receive<UpdateTicketStatusRequestDto>()
-                   service.updateTicketStatus(body)
+                    val success = service.updateTicketStatus(body)
+                    if (!success) throw AppException.BadRequestException("Status Update Failed")
                     call.respond(HttpStatusCode.OK , "Status Updated Successfully")
                 }catch (e : Exception) {
-                    throw e
+                    throw AppException.InternalServerError()
                 }
             }
             get("/all_tickets") {
@@ -69,7 +72,7 @@ fun Route.supportTicketRoutes(
                    val response =  service.allTicket() ?: emptyList()
                     call.respond(HttpStatusCode.OK , response)
                 } catch (e : Exception) {
-                    throw e
+                    throw AppException.InternalServerError()
                 }
             }
         }

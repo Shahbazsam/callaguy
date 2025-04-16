@@ -12,6 +12,7 @@ fun Application.configureRouting(
     serviceRequest : ServiceRequestService,
     supportTicket : SupportTicketService,
     supportMessage : SupportMessageServices,
+    payment : PaymentService
 ) {
     routing {
         customerAuthRoutes(customerAuthService)
@@ -21,5 +22,6 @@ fun Application.configureRouting(
         professionalServiceRequestsRoute(serviceRequest)
         supportMessageRoutes(supportMessage)
         supportTicketRoutes(supportTicket)
+        paymentRoutes(payment)
     }
 }

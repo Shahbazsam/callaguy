@@ -24,13 +24,13 @@ class PaymentServiceImpl(
 
     override suspend fun paymentInformation(requestId: Int): PaymentResponseDto? {
        val response = repository.getPaymentInformationByServiceRequestId(requestId)
-        return response?.let { response ->
+        return response?.let { info ->
             PaymentResponseDto(
-                id = response.id.value,
-                amount = response.amount,
-                status = response.paymentType,
-                paymentDate = response.paymentDate,
-                createdAt = response.createdAt
+                id = info.id.value,
+                amount = info.amount,
+                status = info.paymentType,
+                paymentDate = info.paymentDate,
+                createdAt = info.createdAt
             )
         }
     }

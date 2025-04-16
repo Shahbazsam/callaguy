@@ -17,7 +17,7 @@ fun Route.customerServiceRequestsRoutes(
 ) {
     route("/customer_service_request") {
         authenticate("auth_jwt") {
-            post("create") {
+            post("/create") {
                 val principal = call.principal<JWTPrincipal>()
                 val id = principal?.getClaim("userId", Int::class)
                 val role = principal?.getClaim("role" , String::class)
@@ -26,10 +26,11 @@ fun Route.customerServiceRequestsRoutes(
 
                 val request = call.receive<CreateServiceRequestDto>()
                 try {
-                    service.create(id!! ,request)
+                    val success = service.create(id!! ,request)
+                    if (!success) throw AppException.BadRequestException("Service Request Not Created")
                     call.respond(HttpStatusCode.OK , "Service Request Created Successfully")
                 } catch (e : Exception) {
-                    throw e
+                    throw AppException.InternalServerError()
                 }
             }
             get {
@@ -43,7 +44,7 @@ fun Route.customerServiceRequestsRoutes(
                     val responseData = service.getForCustomer(id!!) ?: emptyList()
                     call.respond(HttpStatusCode.OK , responseData)
                 }catch (e : Exception) {
-                    throw e
+                    throw AppException.InternalServerError()
                 }
             }
             get("{id}") {
@@ -58,7 +59,7 @@ fun Route.customerServiceRequestsRoutes(
                     val data = service.getById(requestId) ?: throw AppException.NotFoundException("Service Request Not Found" , requestId)
                     call.respond(HttpStatusCode.OK , data)
                 }catch (e : Exception) {
-                    throw e
+                    throw AppException.InternalServerError()
                 }
             }
         }
@@ -81,7 +82,7 @@ fun Route.professionalServiceRequestsRoute(
                     val response = service.getForProfessional(id!!) ?: emptyList()
                     call.respond(HttpStatusCode.OK , response)
                 }catch (e : Exception) {
-                    throw e
+                    throw AppException.InternalServerError()
                 }
             }
             post("/accept") {
@@ -94,9 +95,10 @@ fun Route.professionalServiceRequestsRoute(
 
                 try {
                     val success = service.accept( id!! , data.requestId)
-                    if (success) call.respond(HttpStatusCode.OK , "Accepted")
+                    if (!success) throw AppException.BadRequestException("Service Request Failed")
+                    call.respond(HttpStatusCode.OK , "Accepted")
                 }catch (e : Exception) {
-                    throw e
+                    throw AppException.InternalServerError()
                 }
             }
             post("/updateStatus") {
@@ -108,9 +110,10 @@ fun Route.professionalServiceRequestsRoute(
 
                 try {
                     val success = service.updateStatus(requestId = body.requestId , newStatus = body.newStatus)
-                    if (success) call.respond(HttpStatusCode.OK , "Status updated Successfully")
+                    if (!success) throw AppException.BadRequestException("Update Failed")
+                    call.respond(HttpStatusCode.OK , "Status updated Successfully")
                 }catch (e : Exception) {
-                    throw e
+                    throw AppException.InternalServerError()
                 }
             }
             get("{id}") {
@@ -125,7 +128,7 @@ fun Route.professionalServiceRequestsRoute(
                     val data = service.getById(requestId) ?: throw AppException.NotFoundException("Service Request Not Found" , requestId)
                     call.respond(HttpStatusCode.OK , data)
                 }catch (e : Exception) {
-                    throw e
+                    throw AppException.InternalServerError()
                 }
             }
         }
