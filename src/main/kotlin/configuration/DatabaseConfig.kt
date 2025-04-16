@@ -36,8 +36,8 @@ object DatabaseFactory {
                 Payments,
             )
         }
-
     }
+
     private fun migrateDataBase() {
         val flyway = Flyway.configure()
             .dataSource("jdbc:postgresql://localhost:5432/CallAGuy", "postgres", "1234")
