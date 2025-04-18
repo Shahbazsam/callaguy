@@ -9,6 +9,7 @@ fun Application.configureSwagger() {
     routing {
         swaggerUI(path = SWAGGER_PATH , swaggerFile = SWAGGER_FILE_PATH)
     }
+
 }
 
 private const val SWAGGER_PATH = "openapi"
