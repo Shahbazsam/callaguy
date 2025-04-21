@@ -11,6 +11,8 @@ object Services : IntIdTable("services") {
     val isActive = bool("is_active").default(true)
 }
 
+
+
 class ServiceEntity(id : EntityID<Int>) : IntEntity(id) {
     companion object : IntEntityClass<ServiceEntity>(Services)
     var name by Services.name
