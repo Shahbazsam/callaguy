@@ -11,7 +11,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 object DatabaseFactory {
     fun init() {
 
-        //migrateDataBase()
+        migrateDataBase()
 
        val config = HikariConfig().apply {
            jdbcUrl = "jdbc:postgresql://localhost:5432/CallAGuy"
@@ -24,7 +24,7 @@ object DatabaseFactory {
        }
         Database.connect(HikariDataSource(config))
 
-        transaction {
+        /*transaction {
             SchemaUtils.createMissingTablesAndColumns(
                 Customers,
                 Professionals,
@@ -34,8 +34,9 @@ object DatabaseFactory {
                 SupportMessages,
                 SupportTickets,
                 Payments,
+                ProfessionalServices
             )
-        }
+        }*/
     }
 
     private fun migrateDataBase() {

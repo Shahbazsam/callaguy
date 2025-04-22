@@ -21,6 +21,7 @@ val appModule  = module {
     single<SupportMessageRepository>{ SupportMessageRepositoryImpl() }
     single<SupportTicketRepository> { SupportTicketRepositoryImpl() }
     single<PaymentRepository> { PaymentRepositoryImpl() }
+    single<ProfilePictureRepository> { ProfilePictureRepositoryImpl() }
 
     //Service
     single<CustomerAuthService> { CustomerAuthServiceImpl(get() , get() , get()) }
@@ -30,4 +31,5 @@ val appModule  = module {
     single<SupportMessageServices> { SupportMessageServicesImpl(get()) }
     single<SupportTicketService> { SupportTicketServiceImpl(get()) }
     single<PaymentService> {PaymentServiceImpl(get())  }
+    single<ProfilePictureService> { ProfilePictureServiceImpl(get()) }
 }

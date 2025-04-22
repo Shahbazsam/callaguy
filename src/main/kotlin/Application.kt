@@ -32,6 +32,7 @@ fun Application.module() {
     val supportTicket by inject<SupportTicketService>()
     val supportMessage by inject<SupportMessageServices>()
     val payment by inject<PaymentService>()
+    val profilePicture by inject<ProfilePictureService>()
 
     configureAuth(tokenConfig)
     configureExceptionHandling()
@@ -46,7 +47,8 @@ fun Application.module() {
         serviceRequest = serviceRequest,
         supportTicket = supportTicket,
         supportMessage = supportMessage,
-        payment = payment
+        payment = payment,
+        profile = profilePicture
     )
     configureMonitoring()
 }

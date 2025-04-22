@@ -12,6 +12,8 @@ object SubServices : IntIdTable("sub_services") {
     val visitCharge = decimal("visit_Charge" , 10 ,2)
     val isSubscription = bool("is_subscription").default(false)
     val subscriptionDuration = integer("subscription_duration").nullable()
+    val imageUrl = varchar("image_url" , 50).nullable()
+
 }
 
 class SubServiceEntity(id : EntityID<Int>) : IntEntity(id) {
@@ -22,4 +24,5 @@ class SubServiceEntity(id : EntityID<Int>) : IntEntity(id) {
     var visitCharge by SubServices.visitCharge
     var isSubscription by SubServices.isSubscription
     var subscriptionDuration by SubServices.subscriptionDuration
+    var imageUrl by SubServices.imageUrl
 }

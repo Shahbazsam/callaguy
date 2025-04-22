@@ -14,6 +14,7 @@ object Professionals : IntIdTable("professionals") {
     val experience = integer("experience")
     val documents = binary("documents")
     val isApproved = bool("is_approved").default(false)
+    val profilePicture = varchar("profile_picture" , 50).nullable()
 }
 
 
@@ -26,6 +27,7 @@ class ProfessionalEntity(id : EntityID<Int>) : IntEntity(id) {
     var experience by Professionals.experience
     var documents by Professionals.documents
     var isApproved by Professionals.isApproved
+    var profilePicture by Professionals.profilePicture
 
     var services by ServiceEntity via ProfessionalServices
 }
