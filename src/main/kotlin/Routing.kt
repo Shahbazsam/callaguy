@@ -16,7 +16,8 @@ fun Application.configureRouting(
     supportTicket : SupportTicketService,
     supportMessage : SupportMessageServices,
     payment : PaymentService,
-    profile : ProfilePictureService
+    profile : ProfilePictureService,
+    adminService : AdminService
 ) {
     routing {
         staticFiles(remotePath = Constants.EXTERNAL_CUSTOMER_PROFILE_PICTURE_PATH , dir = File(Constants.STATIC_CUSTOMER_PROFILE_PICTURE_PATH))
@@ -24,6 +25,7 @@ fun Application.configureRouting(
 
         customerAuthRoutes(customerAuthService)
         professionalAuthRoutes(professionalAuthService)
+        adminAuthRoutes(adminService)
         serviceRoutes(serviceService)
         customerServiceRequestsRoutes(serviceRequest)
         professionalServiceRequestsRoute(serviceRequest)

@@ -22,3 +22,10 @@ data class ProfessionalRegisterRequest(
     val documents : ByteArray,
     val serviceId : List<Int>
 )
+
+@Serializable
+data class AdminRegisterRequestDto(
+    val userName: String,
+    val email : String,
+    val password: String,
+)

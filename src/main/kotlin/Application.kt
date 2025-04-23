@@ -27,6 +27,7 @@ fun Application.module() {
     }
     val customerAuthService by inject<CustomerAuthService>()
     val professionalAuthService by inject<ProfessionalAuthService>()
+    val adminService by inject<AdminService>()
     val serviceService by inject<ServiceService>()
     val serviceRequest by inject<ServiceRequestService>()
     val supportTicket by inject<SupportTicketService>()
@@ -48,7 +49,8 @@ fun Application.module() {
         supportTicket = supportTicket,
         supportMessage = supportMessage,
         payment = payment,
-        profile = profilePicture
+        profile = profilePicture,
+        adminService = adminService
     )
     configureMonitoring()
 }

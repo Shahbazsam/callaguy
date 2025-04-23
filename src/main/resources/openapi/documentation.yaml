@@ -1,23 +1,1288 @@
-openapi: "3.0.3"
+openapi: 3.0.3
 info:
-  title: "Application API"
-  description: "Application API"
-  version: "1.0.0"
+  title: Application API
+  description: API for managing services, authentication, payments, and support
+  version: 1.0.0
 servers:
-  - url: "http://0.0.0.0:8081"
+  - url: http://0.0.0.0:8081
+tags:
+  - name: Authentication
+    description: User authentication operations
+  - name: Profile
+    description: Profile management (customer, professional, admin)
+  - name: Services
+    description: Service catalog management (admin access)
+  - name: SubServices
+    description: SubService management (admin access)
+  - name: Service Requests
+    description: Service request management (customer, professional)
+  - name: Payment
+    description: Payment processing operations
+  - name: Support
+    description: Support ticket management
 paths:
-  /:
-    get:
-      description: "Hello World!"
+  # --- Customer Authentication ---
+  /customer_auth/register:
+    post:
+      tags: [Authentication]
+      summary: Register a new customer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
       responses:
-        "200":
-          description: "OK"
+        '200':
+          description: Registration successful
           content:
             text/plain:
               schema:
-                type: "string"
-              examples:
-                Example#1:
-                  value: "Hello World!"
+                type: string
+                example: "Registration Successful"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /customer_auth/login:
+    post:
+      tags: [Authentication]
+      summary: Customer login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # --- Professional Authentication ---
+  /professional_auth/register:
+    post:
+      tags: [Authentication]
+      summary: Register a new professional
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProfessionalRegisterRequest'
+      responses:
+        '200':
+          description: Registration successful
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Registration Successful"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /professional_auth/login:
+    post:
+      tags: [Authentication]
+      summary: Professional login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # --- Admin Authentication ---
+  /admin_auth/register:
+    post:
+      tags: [Authentication]
+      summary: Register a new admin
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminRegisterRequestDto'
+      responses:
+        '200':
+          description: Registration successful
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Registration Successful"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /admin_auth/login:
+    post:
+      tags: [Authentication]
+      summary: Admin login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # --- Customer Profile ---
+  /customer_profile:
+    get:
+      tags: [Profile]
+      security:
+        - bearerAuth: []
+      summary: Get Customer Profile Information
+      responses:
+        '200':
+          description: Customer Profile retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerProfileResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /customer_profile_picture:
+    post:
+      tags: [Profile]
+      security:
+        - bearerAuth: []
+      summary: Upload customer profile picture
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Profile picture updated
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Updated Successfully"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # --- Professional Profile ---
+  /professional_profile:
+    get:
+      tags: [Profile]
+      security:
+        - bearerAuth: []
+      summary: Get Professional Profile Information
+      responses:
+        '200':
+          description: Professional Profile retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProfessionalProfileResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /professional_profile_picture:
+    post:
+      tags: [Profile]
+      security:
+        - bearerAuth: []
+      summary: Upload professional profile picture
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Profile picture updated
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Updated Successfully"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # --- Admin - Services ---
+  /services:
+    get:
+      tags: [Services]
+      security:
+        - bearerAuth: []
+      summary: Get all services (Admin)
+      responses:
+        '200':
+          description: Services retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ServiceResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    post:
+      tags: [Services]
+      security:
+        - bearerAuth: []
+      summary: Create a new service (Admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceRequest'
+      responses:
+        '201':
+          description: Service created successfully
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Service created successfully"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /services/{id}:
+    get:
+      tags: [Services]
+      security:
+        - bearerAuth: []
+      summary: Get a service by ID (Admin/User)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Service retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # --- Admin - SubServices ---
+  /sub_services:
+    get:
+      tags: [SubServices]
+      security:
+        - bearerAuth: []
+      summary: Get all sub services (Admin)
+      responses:
+        '200':
+          description: SubServices retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SubServiceResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    post:
+      tags: [SubServices]
+      security:
+        - bearerAuth: []
+      summary: Create a new sub service (Admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubServiceRequest'
+      responses:
+        '201':
+          description: SubService created successfully
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "SubService created successfully"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /sub_services/{id}:
+    get:
+      tags: [SubServices]
+      security:
+        - bearerAuth: []
+      summary: Get sub services by ID (Admin/User)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: SubServices retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubServiceResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /sub_services/by_service/{serviceId}:
+    get:
+      tags: [SubServices]
+      security:
+        - bearerAuth: []
+      summary: Get all subservices by service id (Admin/User)
+      parameters:
+        - name: serviceId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: SubServices retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SubServiceResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # --- Customer/Professional - Service Requests ---
+  /customer_service_request/create:
+    post:
+      tags: [Service Requests]
+      security:
+        - bearerAuth: []
+      summary: Create a service request (Customer)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateServiceRequestDto'
+      responses:
+        '200':
+          description: Service request created
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Service Request Created Successfully"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /customer_service_request:
+    get:
+      tags: [Service Requests]
+      security:
+        - bearerAuth: []
+      summary: Get all service requests for customer
+      responses:
+        '200':
+          description: Service requests retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseServiceRequestEntityDto'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /customer_service_request/{id}:
+    get:
+      tags: [Service Requests]
+      security:
+        - bearerAuth: []
+      summary: Get service request by ID (Customer)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Service request retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseServiceRequestEntityDto'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /professional_service_request:
+    get:
+      tags: [Service Requests]
+      security:
+        - bearerAuth: []
+      summary: Get all service requests for professional
+      responses:
+        '200':
+          description: Service requests retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResponseServiceRequestEntityDto'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /professional_service_request/accept:
+    post:
+      tags: [Service Requests]
+      security:
+        - bearerAuth: []
+      summary: Accept a service request (Professional)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcceptServiceRequestDto'
+      responses:
+        '200':
+          description: Service request accepted
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Accepted"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /professional_service_request/updateStatus:
+    post:
+      tags: [Service Requests]
+      security:
+        - bearerAuth: []
+      summary: Update service request status (Professional)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateServiceRequestDto'
+      responses:
+        '200':
+          description: Status updated
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Status updated Successfully"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /professional_service_request/{id}:
+    get:
+      tags: [Service Requests]
+      security:
+        - bearerAuth: []
+      summary: Get service request by ID (Professional)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Service request retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseServiceRequestEntityDto'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # --- Payment ---
+  /payment/make_payment:
+    post:
+      tags: [Payment]
+      security:
+        - bearerAuth: []
+      summary: Make a payment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InitialPaymentRequestDto'
+      responses:
+        '200':
+          description: Payment successful
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Payment Successful"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /payment/payment_information/{id}:
+    get:
+      tags: [Payment]
+      security:
+        - bearerAuth: []
+      summary: Get payment information by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Payment information retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentResponseDto'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /payment/{id}/status:
+    put:
+      tags: [Payment]
+      security:
+        - bearerAuth: []
+      summary: Update payment status
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Payment status updated
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Payment Status Updated Successfully"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # --- Customer/Admin - Support Tickets ---
+  /supportTicket/create:
+    post:
+      tags: [Support]
+      security:
+        - bearerAuth: []
+      summary: Create a support ticket (Customer)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SupportTicketRequestDto'
+      responses:
+        '200':
+          description: Ticket created
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Support Ticket Created Successfully"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /supportTicket/customer_tickets:
+    get:
+      tags: [Support]
+      security:
+        - bearerAuth: []
+      summary: Get all tickets for customer (Customer)
+      responses:
+        '200':
+          description: Tickets retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SupportTicketResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /supportTicket/update_status:
+    post:
+      tags: [Support]
+      security:
+        - bearerAuth: []
+      summary: Update ticket status (Admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTicketStatusRequestDto'
+      responses:
+        '200':
+          description: Status updated
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Status Updated Successfully"
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /supportTicket/all_tickets:
+    get:
+      tags: [Support]
+      security:
+        - bearerAuth: []
+      summary: Get all tickets (Admin only)
+      responses:
+        '200':
+          description: Tickets retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SupportTicketResponse'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  # --- Support Messages ---
+  /support_messages/create:
+    post:
+      tags: [Support]
+      security:
+        - bearerAuth: []
+      summary: Create a support message (Customer/Admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SupportMessageRequestDto'
+      responses:
+        '200':
+          description: Message created
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /support_messages/{id}:
+    get:
+      tags: [Support]
+      security:
+        - bearerAuth: []
+      summary: Get messages by ticket ID (Customer/Admin)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Messages retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SupportMessageResponseDto'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
 components:
-  schemas: {}
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    LoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          example: "user@example.com"
+        password:
+          type: string
+          example: "password123"
+      required: [email, password]
+
+    RegisterRequest:
+      type: object
+      properties:
+        userName:
+          type: string
+          example: "john_doe"
+        email:
+          type: string
+          example: "john@example.com"
+        password:
+          type: string
+          example: "password123"
+        userType:
+          type: string
+          example: "customer"
+        phone:
+          type: string
+          example: "+1234567890"
+        address:
+          type: string
+          example: "123 Main St"
+      required: [userName, email, password, userType, phone, address]
+
+    ProfessionalRegisterRequest:
+      type: object
+      properties:
+        userName:
+          type: string
+          example: "pro_john"
+        email:
+          type: string
+          example: "pro@example.com"
+        password:
+          type: string
+          example: "password123"
+        experience:
+          type: integer
+          example: 5
+        documents:
+          type: string
+          format: byte
+          example: "base64encodedstring"
+        serviceId:
+          type: array
+          items:
+            type: integer
+          example: [1, 2]
+      required: [userName, email, password, experience, documents, serviceId]
+
+    AdminRegisterRequestDto:
+      type: object
+      properties:
+        userName:
+          type: string
+          example: "admin_user"
+        email:
+          type: string
+          example: "admin@example.com"
+        password:
+          type: string
+          example: "admin123"
+      required: [userName, email, password]
+
+    InitialPaymentRequestDto:
+      type: object
+      properties:
+        serviceRequestId:
+          type: integer
+          example: 1
+        amount:
+          type: string
+          format: decimal
+          example: "100.50"
+      required: [serviceRequestId, amount]
+
+    AcceptServiceRequestDto:
+      type: object
+      properties:
+        requestId:
+          type: integer
+          example: 1
+      required: [requestId]
+
+    CreateServiceRequestDto:
+      type: object
+      properties:
+        subServiceId:
+          type: integer
+          example: 1
+        preferredDate:
+          type: string
+          format: date
+          example: "2023-12-31"
+        preferredTime:
+          type: string
+          format: time
+          example: "14:30:00"
+        address:
+          type: string
+          example: "123 Main St"
+        specialInstructions:
+          type: string
+          example: "Please ring the bell twice"
+      required: [subServiceId, preferredDate, preferredTime, address]
+
+    UpdateServiceRequestDto:
+      type: object
+      properties:
+        requestId:
+          type: integer
+          example: 1
+        newStatus:
+          $ref: '#/components/schemas/ServiceRequestStatus'
+      required: [requestId, newStatus]
+
+    SupportMessageRequestDto:
+      type: object
+      properties:
+        ticketId:
+          type: integer
+          example: 1
+        message:
+          type: string
+          example: "I need help with my service request"
+      required
