@@ -4,27 +4,34 @@ info:
   description: API for managing services, authentication, payments, and support
   version: 1.0.0
 servers:
-  - url: http://0.0.0.0:8081
+  - url: http://127.0.0.1:8081
 tags:
-  - name: Authentication
-    description: User authentication operations
-  - name: Profile
-    description: Profile management (customer, professional, admin)
+  - name: Customer Authentication
+    description: Customer authentication operations
+  - name: Professional Authentication
+    description: Professional authentication operations
+  - name: Admin Authentication
+    description: Admin authentication operations
+  - name: Customer Profile
+    description: Customer profile management
+  - name: Professional Profile
+    description: Professional profile management
   - name: Services
-    description: Service catalog management (admin access)
-  - name: SubServices
-    description: SubService management (admin access)
+    description: Service catalog management
   - name: Service Requests
-    description: Service request management (customer, professional)
+    description: Service request management
   - name: Payment
     description: Payment processing operations
-  - name: Support
+  - name: Support Tickets
     description: Support ticket management
+  - name: Support Messages
+    description: Support message management
+
 paths:
-  # --- Customer Authentication ---
+  # Customer Authentication
   /customer_auth/register:
     post:
-      tags: [Authentication]
+      tags: [Customer Authentication]
       summary: Register a new customer
       requestBody:
         required: true
@@ -49,7 +56,7 @@ paths:
 
   /customer_auth/login:
     post:
-      tags: [Authentication]
+      tags: [Customer Authentication]
       summary: Customer login
       requestBody:
         required: true
@@ -77,10 +84,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
-  # --- Professional Authentication ---
+  # Professional Authentication
   /professional_auth/register:
     post:
-      tags: [Authentication]
+      tags: [Professional Authentication]
       summary: Register a new professional
       requestBody:
         required: true
@@ -105,7 +112,7 @@ paths:
 
   /professional_auth/login:
     post:
-      tags: [Authentication]
+      tags: [Professional Authentication]
       summary: Professional login
       requestBody:
         required: true
@@ -133,10 +140,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
-  # --- Admin Authentication ---
+  # Admin Authentication
   /admin_auth/register:
     post:
-      tags: [Authentication]
+      tags: [Admin Authentication]
       summary: Register a new admin
       requestBody:
         required: true
@@ -161,7 +168,7 @@ paths:
 
   /admin_auth/login:
     post:
-      tags: [Authentication]
+      tags: [Admin Authentication]
       summary: Admin login
       requestBody:
         required: true
@@ -189,16 +196,16 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
-  # --- Customer Profile ---
+  # Customer Profile
   /customer_profile:
     get:
-      tags: [Profile]
+      tags: [Customer Profile]
       security:
         - bearerAuth: []
-      summary: Get Customer Profile Information
+      summary: Get customer profile information
       responses:
         '200':
-          description: Customer Profile retrieved
+          description: Profile information retrieved
           content:
             application/json:
               schema:
@@ -218,7 +225,7 @@ paths:
 
   /customer_profile_picture:
     post:
-      tags: [Profile]
+      tags: [Customer Profile]
       security:
         - bearerAuth: []
       summary: Upload customer profile picture
@@ -258,16 +265,16 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
-  # --- Professional Profile ---
+  # Professional Profile
   /professional_profile:
     get:
-      tags: [Profile]
+      tags: [Professional Profile]
       security:
         - bearerAuth: []
-      summary: Get Professional Profile Information
+      summary: Get professional profile information
       responses:
         '200':
-          description: Professional Profile retrieved
+          description: Profile information retrieved
           content:
             application/json:
               schema:
@@ -287,7 +294,7 @@ paths:
 
   /professional_profile_picture:
     post:
-      tags: [Profile]
+      tags: [Professional Profile]
       security:
         - bearerAuth: []
       summary: Upload professional profile picture
@@ -327,13 +334,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
-  # --- Admin - Services ---
+  # Services
   /services:
     get:
       tags: [Services]
       security:
         - bearerAuth: []
-      summary: Get all services (Admin)
+      summary: Get all services
       responses:
         '200':
           description: Services retrieved
@@ -350,50 +357,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
-    post:
-      tags: [Services]
-      security:
-        - bearerAuth: []
-      summary: Create a new service (Admin)
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ServiceRequest'
-      responses:
-        '201':
-          description: Service created successfully
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: "Service created successfully"
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-
   /services/{id}:
     get:
       tags: [Services]
       security:
         - bearerAuth: []
-      summary: Get a service by ID (Admin/User)
+      summary: Get subservices by service ID
       parameters:
         - name: id
           in: path
@@ -402,144 +371,7 @@ paths:
             type: integer
       responses:
         '200':
-          description: Service retrieved
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ServiceResponse'
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-
-  # --- Admin - SubServices ---
-  /sub_services:
-    get:
-      tags: [SubServices]
-      security:
-        - bearerAuth: []
-      summary: Get all sub services (Admin)
-      responses:
-        '200':
-          description: SubServices retrieved
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/SubServiceResponse'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-
-    post:
-      tags: [SubServices]
-      security:
-        - bearerAuth: []
-      summary: Create a new sub service (Admin)
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SubServiceRequest'
-      responses:
-        '201':
-          description: SubService created successfully
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: "SubService created successfully"
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-
-  /sub_services/{id}:
-    get:
-      tags: [SubServices]
-      security:
-        - bearerAuth: []
-      summary: Get sub services by ID (Admin/User)
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: integer
-      responses:
-        '200':
-          description: SubServices retrieved
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SubServiceResponse'
-        '400':
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        '500':
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-
-  /sub_services/by_service/{serviceId}:
-    get:
-      tags: [SubServices]
-      security:
-        - bearerAuth: []
-      summary: Get all subservices by service id (Admin/User)
-      parameters:
-        - name: serviceId
-          in: path
-          required: true
-          schema:
-            type: integer
-      responses:
-        '200':
-          description: SubServices retrieved
+          description: Subservices retrieved
           content:
             application/json:
               schema:
@@ -552,12 +384,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
         '500':
           description: Internal server error
           content:
@@ -565,13 +391,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
-  # --- Customer/Professional - Service Requests ---
+  # Service Requests
   /customer_service_request/create:
     post:
       tags: [Service Requests]
       security:
         - bearerAuth: []
-      summary: Create a service request (Customer)
+      summary: Create a service request
       requestBody:
         required: true
         content:
@@ -638,7 +464,7 @@ paths:
       tags: [Service Requests]
       security:
         - bearerAuth: []
-      summary: Get service request by ID (Customer)
+      summary: Get service request by ID
       parameters:
         - name: id
           in: path
@@ -710,7 +536,7 @@ paths:
       tags: [Service Requests]
       security:
         - bearerAuth: []
-      summary: Accept a service request (Professional)
+      summary: Accept a service request
       requestBody:
         required: true
         content:
@@ -749,7 +575,7 @@ paths:
       tags: [Service Requests]
       security:
         - bearerAuth: []
-      summary: Update service request status (Professional)
+      summary: Update service request status
       requestBody:
         required: true
         content:
@@ -788,7 +614,7 @@ paths:
       tags: [Service Requests]
       security:
         - bearerAuth: []
-      summary: Get service request by ID (Professional)
+      summary: Get service request by ID
       parameters:
         - name: id
           in: path
@@ -827,7 +653,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
-  # --- Payment ---
+  # Payment
   /payment/make_payment:
     post:
       tags: [Payment]
@@ -950,13 +776,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
-  # --- Customer/Admin - Support Tickets ---
+  # Support Tickets
   /supportTicket/create:
     post:
-      tags: [Support]
+      tags: [Support Tickets]
       security:
         - bearerAuth: []
-      summary: Create a support ticket (Customer)
+      summary: Create a support ticket
       requestBody:
         required: true
         content:
@@ -986,10 +812,10 @@ paths:
 
   /supportTicket/customer_tickets:
     get:
-      tags: [Support]
+      tags: [Support Tickets]
       security:
         - bearerAuth: []
-      summary: Get all tickets for customer (Customer)
+      summary: Get all tickets for customer
       responses:
         '200':
           description: Tickets retrieved
@@ -1014,10 +840,10 @@ paths:
 
   /supportTicket/update_status:
     post:
-      tags: [Support]
+      tags: [Support Tickets]
       security:
         - bearerAuth: []
-      summary: Update ticket status (Admin)
+      summary: Update ticket status
       requestBody:
         required: true
         content:
@@ -1047,10 +873,10 @@ paths:
 
   /supportTicket/all_tickets:
     get:
-      tags: [Support]
+      tags: [Support Tickets]
       security:
         - bearerAuth: []
-      summary: Get all tickets (Admin only)
+      summary: Get all tickets (admin only)
       responses:
         '200':
           description: Tickets retrieved
@@ -1073,13 +899,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
-  # --- Support Messages ---
+  # Support Messages
   /support_messages/create:
     post:
-      tags: [Support]
+      tags: [Support Messages]
       security:
         - bearerAuth: []
-      summary: Create a support message (Customer/Admin)
+      summary: Create a support message
       requestBody:
         required: true
         content:
@@ -1110,10 +936,10 @@ paths:
 
   /support_messages/{id}:
     get:
-      tags: [Support]
+      tags: [Support Messages]
       security:
         - bearerAuth: []
-      summary: Get messages by ticket ID (Customer/Admin)
+      summary: Get messages by ticket ID
       parameters:
         - name: id
           in: path
@@ -1150,6 +976,7 @@ components:
       bearerFormat: JWT
 
   schemas:
+    # Authentication Schemas
     LoginRequest:
       type: object
       properties:
@@ -1224,26 +1051,105 @@ components:
           example: "admin123"
       required: [userName, email, password]
 
-    InitialPaymentRequestDto:
+    AuthResponse:
       type: object
       properties:
-        serviceRequestId:
+        token:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      required: [token]
+
+    # Profile Schemas
+    CustomerProfileResponse:
+      type: object
+      properties:
+        id:
           type: integer
           example: 1
-        amount:
+        userName:
+          type: string
+          example: "john_doe"
+        email:
+          type: string
+          example: "john@example.com"
+        phone:
+          type: string
+          example: "+1234567890"
+        address:
+          type: string
+          example: "123 Main St"
+        profilePicture:
+          type: string
+          example: "http://example.com/profile.jpg"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2023-01-01T12:00:00Z"
+
+    ProfessionalProfileResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        userName:
+          type: string
+          example: "pro_john"
+        email:
+          type: string
+          example: "pro@example.com"
+        experience:
+          type: integer
+          example: 5
+        services:
+          type: array
+          items:
+            type: string
+          example: ["Cleaning", "Plumbing"]
+        profilePicture:
+          type: string
+          example: "http://example.com/profile.jpg"
+        documents:
+          type: string
+          example: "http://example.com/documents.pdf"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2023-01-01T12:00:00Z"
+
+    # Service Schemas
+    ServiceResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "Cleaning"
+        description:
+          type: string
+          example: "Home cleaning services"
+
+    SubServiceResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "Deep Cleaning"
+        basePrice:
           type: string
           format: decimal
-          example: "100.50"
-      required: [serviceRequestId, amount]
+          example: "80.00"
+        visitCharge:
+          type: string
+          format: decimal
+          example: "20.00"
 
-    AcceptServiceRequestDto:
-      type: object
-      properties:
-        requestId:
-          type: integer
-          example: 1
-      required: [requestId]
-
+    # Service Request Schemas
     CreateServiceRequestDto:
       type: object
       properties:
@@ -1266,6 +1172,14 @@ components:
           example: "Please ring the bell twice"
       required: [subServiceId, preferredDate, preferredTime, address]
 
+    AcceptServiceRequestDto:
+      type: object
+      properties:
+        requestId:
+          type: integer
+          example: 1
+      required: [requestId]
+
     UpdateServiceRequestDto:
       type: object
       properties:
@@ -1276,6 +1190,126 @@ components:
           $ref: '#/components/schemas/ServiceRequestStatus'
       required: [requestId, newStatus]
 
+    ResponseServiceRequestEntityDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        customerId:
+          type: integer
+          example: 1
+        professionalId:
+          type: integer
+          example: 2
+        amount:
+          type: string
+          format: decimal
+          example: "100.50"
+        subService:
+          type: string
+          example: "Deep Cleaning"
+        subServiceId:
+          type: integer
+          example: 1
+        status:
+          $ref: '#/components/schemas/ServiceRequestStatus'
+        preferredDate:
+          type: string
+          format: date
+          example: "2023-12-31"
+        preferredTime:
+          type: string
+          format: time
+          example: "14:30:00"
+        address:
+          type: string
+          example: "123 Main St"
+        specialInstructions:
+          type: string
+          example: "Please ring the bell twice"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2023-01-01T11:30:00Z"
+
+    # Payment Schemas
+    InitialPaymentRequestDto:
+      type: object
+      properties:
+        serviceRequestId:
+          type: integer
+          example: 1
+        amount:
+          type: string
+          format: decimal
+          example: "100.50"
+      required: [serviceRequestId, amount]
+
+    PaymentResponseDto:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        amount:
+          type: string
+          format: decimal
+          example: "100.50"
+        status:
+          $ref: '#/components/schemas/PaymentStatus'
+        paymentDate:
+          type: string
+          format: date-time
+          example: "2023-01-01T12:00:00Z"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2023-01-01T11:30:00Z"
+
+    # Support Ticket Schemas
+    SupportTicketRequestDto:
+      type: object
+      properties:
+        serviceRequestId:
+          type: integer
+          example: 1
+        issueType:
+          type: string
+          example: "Payment issue"
+      required: [serviceRequestId, issueType]
+
+    UpdateTicketStatusRequestDto:
+      type: object
+      properties:
+        ticketId:
+          type: integer
+          example: 1
+        status:
+          type: boolean
+          example: true
+      required: [ticketId]
+
+    SupportTicketResponse:
+      type: object
+      properties:
+        customerId:
+          type: integer
+          example: 1
+        serviceRequestId:
+          type: integer
+          example: 1
+        issueType:
+          type: string
+          example: "Payment issue"
+        status:
+          $ref: '#/components/schemas/SupportTicketStatus'
+        createdAt:
+          type: string
+          format: date-time
+          example: "2023-01-01T11:30:00Z"
+
+    # Support Message Schemas
     SupportMessageRequestDto:
       type: object
       properties:
@@ -1285,4 +1319,52 @@ components:
         message:
           type: string
           example: "I need help with my service request"
-      required
+      required: [ticketId, message]
+
+    SupportMessageResponseDto:
+      type: object
+      properties:
+        ticketId:
+          type: integer
+          example: 1
+        sender:
+          $ref: '#/components/schemas/SupportMessageSender'
+        message:
+          type: string
+          example: "I need help with my service request"
+        createdAt:
+          type: string
+          format: date-time
+          example: "2023-01-01T11:30:00Z"
+
+    # Enums
+    ServiceRequestStatus:
+      type: string
+      enum: [PENDING, ACCEPTED, IN_PROGRESS, COMPLETED, CANCELLED]
+      example: "PENDING"
+
+    PaymentStatus:
+      type: string
+      enum: [PENDING, SUCCESSFUL, FAILED]
+      example: "SUCCESSFUL"
+
+    SupportTicketStatus:
+      type: string
+      enum: [OPEN, CLOSED]
+      example: "OPEN"
+
+    SupportMessageSender:
+      type: string
+      enum: [CUSTOMER, ADMIN]
+      example: "CUSTOMER"
+
+    # Error Schema
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: string
+          example: "INTERNAL_ERROR"
+        message:
+          type: string
+          example: "An unexpected error occurred"
