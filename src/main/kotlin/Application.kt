@@ -35,6 +35,7 @@ fun Application.module() {
     val payment by inject<PaymentService>()
     val profilePicture by inject<ProfilePictureService>()
 
+
     configureAuth(tokenConfig)
     configureExceptionHandling()
     configureSerialization()
@@ -53,4 +54,9 @@ fun Application.module() {
         adminService = adminService
     )
     configureMonitoring()
+
+    /*environment.monitor.subscribe(ApplicationStarted){
+        seedServicesAndSubServices()
+        setServiceImageUrls()
+    }*/
 }

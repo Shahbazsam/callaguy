@@ -12,7 +12,6 @@ interface CustomerRepository {
         userName : String,
         email: String,
         password : String,
-        type : String,
         address : String,
         phone : String
     ): Boolean
@@ -35,7 +34,6 @@ class CustomerRepositoryImpl : CustomerRepository {
         userName: String,
         email: String,
         password: String,
-        type: String,
         address: String,
         phone: String
     ) : Boolean {
@@ -45,7 +43,6 @@ class CustomerRepositoryImpl : CustomerRepository {
                     this.userName = userName
                     this.email = email
                     this.passwordHash = password
-                    this.type = type
                     this.address = address
                     this.phone = phone
                 }

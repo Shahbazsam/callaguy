@@ -7,5 +7,6 @@ import kotlinx.serialization.Serializable
 data class ServiceResponse(
     val id : Int ,
     val name : String,
-    val description: String
+    val description: String,
+    val imageUrl : String? = null
 )

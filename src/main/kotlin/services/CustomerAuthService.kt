@@ -26,7 +26,6 @@ class  CustomerAuthServiceImpl(
             userName = request.userName,
             email = request.email,
             password = passwordUtil.hash(password = request.password),
-            type = request.userType,
             phone = request.phone,
             address = request.address
         )

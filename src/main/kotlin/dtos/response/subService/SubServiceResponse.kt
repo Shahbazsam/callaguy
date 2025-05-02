@@ -12,5 +12,6 @@ data class SubServiceResponse(
     @Serializable(with = BigDecimalSerializer::class)
     val basePrice : BigDecimal,
     @Serializable(with = BigDecimalSerializer::class)
-    val visitCharge : BigDecimal
+    val visitCharge : BigDecimal,
+    val imageUrl : String? = null
 )
