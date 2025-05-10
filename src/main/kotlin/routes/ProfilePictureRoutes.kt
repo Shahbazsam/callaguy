@@ -40,6 +40,7 @@ fun Route.customerProfilePicture(
                 } catch (e : Exception) {
                     throw AppException.InternalServerError()
                 }
+
             }
             get("/profile_info") {
                 val principal = call.principal<JWTPrincipal>()
