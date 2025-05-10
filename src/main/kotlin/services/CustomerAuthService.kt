@@ -2,6 +2,7 @@ package com.services
 
 import com.dtos.requests.auth.LoginRequest
 import com.dtos.requests.auth.RegisterRequest
+import com.dtos.response.profile.ProfileInfoDto
 import com.exceptions.AppException
 import com.repository.CustomerRepository
 import com.utils.JwtConfig
@@ -10,6 +11,7 @@ import com.utils.PasswordUtils
 interface CustomerAuthService {
     suspend fun registerCustomer(request: RegisterRequest) : Boolean
     suspend fun authenticate(credentials : LoginRequest) : String
+    suspend fun getProfileInformation(customerId : Int) : ProfileInfoDto?
 }
 
 class  CustomerAuthServiceImpl(
@@ -38,5 +40,18 @@ class  CustomerAuthServiceImpl(
             throw AppException.UnauthorizedException("Invalid Credentials")
         }
         return jwtConfig.generateToken(user.id.value , user.type)
+    }
+
+    override suspend fun getProfileInformation(customerId: Int): ProfileInfoDto? {
+        val response = customerRepository.findById(customerId)
+        return response?.let {
+             ProfileInfoDto(
+                userName = it.userName,
+                email = it.email,
+                address = it.address,
+                phone = it.phone,
+                profilePicture = it.profilePicture
+            )
+        }
     }
 }

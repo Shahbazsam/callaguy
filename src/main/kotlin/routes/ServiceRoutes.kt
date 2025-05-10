@@ -14,10 +14,6 @@ fun Route.serviceRoutes(
     route("/services"){
         authenticate("auth_jwt") {
             get {
-                val principal = call.principal<JWTPrincipal>()
-                val role = principal?.getClaim("role" , String::class)
-                //if (role != "professional") throw AppException.BadRequestException("Wrong individual")
-
                 try {
                     val services = serviceService.getAllServices()
                     call.respond(HttpStatusCode.OK , services)

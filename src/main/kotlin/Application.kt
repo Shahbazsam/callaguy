@@ -34,7 +34,10 @@ fun Application.module() {
     val supportMessage by inject<SupportMessageServices>()
     val payment by inject<PaymentService>()
     val profilePicture by inject<ProfilePictureService>()
-
+    environment.monitor.subscribe(ApplicationStarted){
+        //seedServicesAndSubServices()
+        setServiceImageUrls()
+    }
 
     configureAuth(tokenConfig)
     configureExceptionHandling()
@@ -55,8 +58,5 @@ fun Application.module() {
     )
     configureMonitoring()
 
-    /*environment.monitor.subscribe(ApplicationStarted){
-        seedServicesAndSubServices()
-        setServiceImageUrls()
-    }*/
+
 }

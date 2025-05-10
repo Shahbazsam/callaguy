@@ -1,6 +1,7 @@
 package com.routes
 
 import com.exceptions.AppException
+import com.services.CustomerAuthService
 import com.services.ProfilePictureService
 import io.ktor.http.*
 import io.ktor.http.content.*
@@ -11,20 +12,16 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 fun Route.customerProfilePicture(
-    service : ProfilePictureService
+    service : ProfilePictureService,
+    customerService : CustomerAuthService
 ) {
-    route("/customer_profile_picture") {
+    route("/customer_profile") {
         authenticate("auth_jwt") {
-            post {
+            post("/picture") {
                 val principal = call.principal<JWTPrincipal>()
                 val id = principal?.getClaim("userId" , Int::class) ?: throw AppException.UnauthorizedException("Not Authorized")
                 val role = principal.getClaim("role" , String::class) ?: throw AppException.UnauthorizedException("Not Authorized")
                 if (role != "customer") throw AppException.UnauthorizedException("Not Authorized")
-
-                /*var fileName : String? = null
-                var imageUrl : String? = null
-                fileName = data.save(Constants.STATIC_CUSTOMER_PROFILE_PICTURE_PATH)
-                imageUrl = "${Constants.BASE_URL}${Constants.EXTERNAL_CUSTOMER_PROFILE_PICTURE_PATH}/$fileName"*/
 
                 var uploadedFile : PartData.FileItem? = null
 
@@ -44,8 +41,22 @@ fun Route.customerProfilePicture(
                     throw AppException.InternalServerError()
                 }
             }
+            get("/profile_info") {
+                val principal = call.principal<JWTPrincipal>()
+                val id = principal?.getClaim("userId" , Int::class) ?: throw AppException.UnauthorizedException("Not Authorized")
+                val role = principal.getClaim("role" , String::class) ?: throw AppException.UnauthorizedException("Not Authorized")
+                if (role != "customer") throw AppException.UnauthorizedException("Not Authorized")
+
+                try {
+                    val response = customerService.getProfileInformation(id) ?: throw AppException.NotFoundException("Profile Not Found" , id)
+                    call.respond(HttpStatusCode.OK ,  response)
+                }catch (e : Exception) {
+                    throw AppException.InternalServerError()
+                }
+            }
         }
     }
+
 }
 
 fun Route.professionalProfilePicture(
@@ -80,3 +91,13 @@ fun Route.professionalProfilePicture(
         }
     }
 }
+
+
+
+
+
+
+/*var fileName : String? = null
+var imageUrl : String? = null
+fileName = data.save(Constants.STATIC_CUSTOMER_PROFILE_PICTURE_PATH)
+imageUrl = "${Constants.BASE_URL}${Constants.EXTERNAL_CUSTOMER_PROFILE_PICTURE_PATH}/$fileName"*/

@@ -354,46 +354,46 @@ fun seedServicesAndSubServices() {
 }
 
 
-fun setServiceImageUrls(baseUrl: String = "http://localhost:8081/services") {
+fun setServiceImageUrls(baseUrl: String = "http://10.20.6.60:8081/services_images") {
     transaction {
         ServiceEntity.find { Services.name eq "Cleaning" }.firstOrNull()?.apply {
-            imageUrl = "$baseUrl/cleaning.png"
+            imageUrl = "$baseUrl/cleaning1.png"
         }
 
         ServiceEntity.find { Services.name eq "Plumbing" }.firstOrNull()?.apply {
-            imageUrl = "$baseUrl/plumbing.png"
+            imageUrl = "$baseUrl/plumbing1.png"
         }
 
         ServiceEntity.find { Services.name eq "Electrical" }.firstOrNull()?.apply {
-            imageUrl = "$baseUrl/electrical.png"
+            imageUrl = "$baseUrl/electrical1.png"
         }
 
         ServiceEntity.find { Services.name eq "Home Appliance Repair" }.firstOrNull()?.apply {
-            imageUrl = "$baseUrl/home_appliance.png"
+            imageUrl = "$baseUrl/home_appliance1.png"
         }
 
         ServiceEntity.find { Services.name eq "Pest Control" }.firstOrNull()?.apply {
-            imageUrl = "$baseUrl/pest_control.png"
+            imageUrl = "$baseUrl/pest_control1.png"
         }
 
         ServiceEntity.find { Services.name eq "AC Services" }.firstOrNull()?.apply {
-            imageUrl = "$baseUrl/ac_service.png"
+            imageUrl = "$baseUrl/ac_service1.png"
         }
 
         ServiceEntity.find { Services.name eq "Carpentry" }.firstOrNull()?.apply {
-            imageUrl = "$baseUrl/carpenter.png"
+            imageUrl = "$baseUrl/carpenter1.png"
         }
 
         ServiceEntity.find { Services.name eq "Painting" }.firstOrNull()?.apply {
-            imageUrl = "$baseUrl/painting.png"
+            imageUrl = "$baseUrl/painting1.png"
         }
 
         ServiceEntity.find { Services.name eq "Home Sanitization" }.firstOrNull()?.apply {
-            imageUrl = "$baseUrl/sanitizer.png"
+            imageUrl = "$baseUrl/sanitizer1.png"
         }
 
         ServiceEntity.find { Services.name eq "Gardening & Landscaping" }.firstOrNull()?.apply {
-            imageUrl = "$baseUrl/gardening.png"
+            imageUrl = "$baseUrl/gardening1.png"
         }
     }
 }

@@ -24,7 +24,7 @@ object DatabaseFactory {
        }
         Database.connect(HikariDataSource(config))
 
-        transaction {
+        /*transaction {
             SchemaUtils.createMissingTablesAndColumns(
                 Customers,
                 Professionals,
@@ -37,7 +37,7 @@ object DatabaseFactory {
                 ProfessionalServices,
                 Admin
             )
-        }
+        }*/
     }
 
     private fun migrateDataBase() {
