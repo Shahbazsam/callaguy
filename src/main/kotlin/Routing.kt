@@ -33,7 +33,7 @@ fun Application.configureRouting(
         supportMessageRoutes(supportMessage)
         supportTicketRoutes(supportTicket)
         paymentRoutes(payment)
-        customerProfilePicture(profile)
+        customerProfilePicture(profile , customerAuthService)
         professionalProfilePicture(profile)
 
     }

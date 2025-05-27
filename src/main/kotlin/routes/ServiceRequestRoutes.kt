@@ -39,7 +39,7 @@ fun Route.customerServiceRequestsRoutes(
                 val role = principal?.getClaim("role" , String::class)
 
                 if (role != "customer") throw AppException.ForbiddenException()
-
+                println("$role , $id")
                 try {
                     val responseData = service.getForCustomer(id!!) ?: emptyList()
                     call.respond(HttpStatusCode.OK , responseData)

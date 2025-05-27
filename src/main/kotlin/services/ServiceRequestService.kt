@@ -4,6 +4,7 @@ import com.dtos.requests.serviceRequest.CreateServiceRequestDto
 import com.dtos.response.serviceRequest.ResponseServiceRequestEntityDto
 import com.entities.ServiceRequestStatus
 import com.repository.ServiceRequestRepository
+import org.flywaydb.core.api.logging.Log
 
 interface ServiceRequestService {
     suspend fun create(id : Int , request : CreateServiceRequestDto) : Boolean
@@ -29,22 +30,8 @@ class ServiceRequestServiceImpl(
     }
 
     override suspend fun getForCustomer(customerId: Int): List<ResponseServiceRequestEntityDto>? {
-        return repository.getServiceRequestByCustomer(customerId)?.map { request ->
-            ResponseServiceRequestEntityDto(
-                id = request.id.value,
-                customerId = request.customer.id.value,
-                professionalId = request.professional?.id?.value ,
-                amount = request.subService.basePrice,
-                subService = request.subService.name,
-                subServiceId = request.subService.id.value,
-                status = request.status,
-                preferredDate = request.preferredDate,
-                preferredTime = request.preferredTime,
-                address = request.address,
-                specialInstructions = request.specialInstructions,
-                createdAt = request.createdAt
-            )
-        }
+        return repository.getServiceRequestByCustomer(customerId)
+
     }
 
     override suspend fun getForProfessional(professionalId: Int): List<ResponseServiceRequestEntityDto>? {

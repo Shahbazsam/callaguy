@@ -1,7 +1,9 @@
 package com.repository
 
+import com.dtos.response.serviceRequest.ResponseServiceRequestEntityDto
 import com.entities.*
 import com.exceptions.AppException
+import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -21,7 +23,7 @@ interface ServiceRequestRepository {
     suspend fun getRequestedServiceRequestsForProfessional(professionalId : Int) : List<ServiceRequestEntity>?
     suspend fun acceptServiceRequest(professionalId: Int , requestId : Int ) :Boolean
     suspend fun updateRequestStatus(requestId: Int , newStatus : ServiceRequestStatus) : Boolean
-    suspend fun getServiceRequestByCustomer(customerId: Int) : List<ServiceRequestEntity>?
+    suspend fun getServiceRequestByCustomer(customerId: Int) : List<ResponseServiceRequestEntityDto>?
     suspend fun getServiceRequestById(requestId : Int) : ServiceRequestEntity?
 }
 
@@ -42,7 +44,7 @@ class ServiceRequestRepositoryImpl : ServiceRequestRepository {
                     this.preferredDate = preferredDate
                     this.preferredTime = preferredTime
                     this.address = address
-                    this.specialInstructions = specialInstructions
+                    this.specialInstructions = specialInstruction
                     createdAt = LocalDateTime.now()
                 }
             }
@@ -104,15 +106,26 @@ class ServiceRequestRepositoryImpl : ServiceRequestRepository {
         }
     }
 
-    override suspend fun getServiceRequestByCustomer(customerId: Int): List<ServiceRequestEntity>? {
-        return try {
-            transaction {
-                ServiceRequestEntity.find {
-                    ServiceRequests.customer eq customerId
-                }.toList()
+    override suspend fun getServiceRequestByCustomer(customerId: Int): List<ResponseServiceRequestEntityDto>? {
+        return newSuspendedTransaction {
+            ServiceRequestEntity.find {
+                ServiceRequests.customer eq customerId
+            }.map { request ->
+                ResponseServiceRequestEntityDto(
+                    id = request.id.value,
+                    customerId = request.customer.id.value,
+                    professionalId = request.professional?.id?.value,
+                    amount = request.subService.basePrice,
+                    subService = request.subService.name,
+                    subServiceId = request.subService.id.value,
+                    status = request.status,
+                    preferredDate = request.preferredDate,
+                    preferredTime = request.preferredTime,
+                    address = request.address,
+                    specialInstructions = request.specialInstructions,
+                    createdAt = request.createdAt
+                )
             }
-        } catch (e : Exception) {
-            throw AppException.InternalServerError()
         }
 
     }
