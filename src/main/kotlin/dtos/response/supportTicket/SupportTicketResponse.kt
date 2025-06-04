@@ -7,6 +7,7 @@ import java.time.LocalDateTime
 
 @Serializable
 data class SupportTicketResponse(
+    val ticketId : Int,
     val customerId : Int,
     val serviceRequestId : Int,
     val issueType : String,

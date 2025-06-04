@@ -12,7 +12,7 @@ import io.ktor.server.routing.*
 
 fun Route.supportMessageRoutes(
     service : SupportMessageServices
-    ) {
+) {
 
     route("/support_messages") {
         authenticate ("auth_jwt") {

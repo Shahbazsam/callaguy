@@ -33,6 +33,7 @@ class SupportTicketServiceImpl(
     override suspend fun allTicket(): List<SupportTicketResponse>? {
         return repository.getAllTicket()?.map { ticket ->
             SupportTicketResponse(
+                ticketId = ticket.id.value,
                 customerId = ticket.customer.id.value,
                 serviceRequestId = ticket.serviceRequest.id.value,
                 issueType = ticket.issueType,
@@ -45,6 +46,7 @@ class SupportTicketServiceImpl(
     override suspend fun customersTickets(customerId: Int): List<SupportTicketResponse>? {
         return repository.getAllTicketForCustomer(customerId)?.map { ticket ->
             SupportTicketResponse(
+                ticketId = ticket.id.value,
                 customerId = ticket.customer.id.value,
                 serviceRequestId = ticket.serviceRequest.id.value,
                 issueType = ticket.issueType,
