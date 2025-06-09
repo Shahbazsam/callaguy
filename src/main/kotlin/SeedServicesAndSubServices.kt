@@ -3,6 +3,7 @@ package com
 import com.entities.ServiceEntity
 import com.entities.Services
 import com.entities.SubServiceEntity
+import com.entities.SubServices
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.math.BigDecimal
 
@@ -357,44 +358,86 @@ fun seedServicesAndSubServices() {
 fun setServiceImageUrls(baseUrl: String = "http://10.20.6.60:8081/services_images") {
     transaction {
         ServiceEntity.find { Services.name eq "Cleaning" }.firstOrNull()?.apply {
-            imageUrl = "$baseUrl/cleaning1.png"
+            imageUrl = "$baseUrl/cleaning.png"
         }
 
         ServiceEntity.find { Services.name eq "Plumbing" }.firstOrNull()?.apply {
-            imageUrl = "$baseUrl/plumbing1.png"
+            imageUrl = "$baseUrl/plumbing.png"
         }
 
         ServiceEntity.find { Services.name eq "Electrical" }.firstOrNull()?.apply {
-            imageUrl = "$baseUrl/electrical1.png"
+            imageUrl = "$baseUrl/electrical.png"
         }
 
         ServiceEntity.find { Services.name eq "Home Appliance Repair" }.firstOrNull()?.apply {
-            imageUrl = "$baseUrl/home_appliance1.png"
+            imageUrl = "$baseUrl/home_appliance.png"
         }
 
         ServiceEntity.find { Services.name eq "Pest Control" }.firstOrNull()?.apply {
-            imageUrl = "$baseUrl/pest_control1.png"
+            imageUrl = "$baseUrl/pest_control.png"
         }
 
         ServiceEntity.find { Services.name eq "AC Services" }.firstOrNull()?.apply {
-            imageUrl = "$baseUrl/ac_service1.png"
+            imageUrl = "$baseUrl/ac_service.png"
         }
 
         ServiceEntity.find { Services.name eq "Carpentry" }.firstOrNull()?.apply {
-            imageUrl = "$baseUrl/carpenter1.png"
+            imageUrl = "$baseUrl/carpenter.png"
         }
 
         ServiceEntity.find { Services.name eq "Painting" }.firstOrNull()?.apply {
-            imageUrl = "$baseUrl/painting1.png"
+            imageUrl = "$baseUrl/painting.png"
         }
 
         ServiceEntity.find { Services.name eq "Home Sanitization" }.firstOrNull()?.apply {
-            imageUrl = "$baseUrl/sanitizer1.png"
+            imageUrl = "$baseUrl/sanitizer.png"
         }
 
         ServiceEntity.find { Services.name eq "Gardening & Landscaping" }.firstOrNull()?.apply {
-            imageUrl = "$baseUrl/gardening1.png"
+            imageUrl = "$baseUrl/gardening.png"
         }
     }
 }
+
+fun setSubServiceImageUrls(baseUrl: String = "http://10.20.6.60:8081/subservices_images") {
+    transaction {
+        mapOf(
+            "Basic Home Cleaning" to "basic_home_cleaning.png",
+            "Deep Cleaning" to "deep_cleaning.png",
+            "Monthly Cleaning Plan" to "monthly_cleaning_plan.png",
+            "Tap Leak Fix" to "tap_leak_fix.png",
+            "Water Tank Installation" to "water_tank_installation.png",
+            "Plumbing Checkup Plan" to "plumbing_checkup_plan.png",
+            "Light Fitting" to "light_fitting.png",
+            "Wiring Repair" to "wiring_repair.png",
+            "Electrical Safety Plan" to "electrical_safety_plan.png",
+            "Refrigerator Repair" to "refrigerator_repair.png",
+            "Washing Machine Repair" to "washing_machine_repair.png",
+            "Appliance Maintenance Plan" to "appliance_maintenance_plan.png",
+            "Cockroach Treatment" to "cockroach_treatment.png",
+            "Rodent Control" to "rodent_control.png",
+            "Quarterly Pest Plan" to "quaterly_pest_plan.png",
+            "AC Gas Refill" to "ac_gas_fill.png",
+            "AC Installation" to "ac_installation.png",
+            "Annual AC Service Plan" to "annual_ac_service_plan.png",
+            "Furniture Assembly" to "furniture_assembly.png",
+            "Door Repair" to "door_repair.png",
+            "Wood Maintenance Plan" to "wood_maintenance_plan.png",
+            "Single Room Paint" to "single_room_paint.png",
+            "Full House Painting" to "full_house_painting.png",
+            "Disinfection Service" to "disinfection_service.png",
+            "Office Sanitization" to "office_sanitization.png",
+            "Monthly Sanitize Plan" to "monthly_sanitize_plan.png",
+            "Lawn Mowing" to "lawn_mowing.png",
+            "Hedge Trimming" to "hedge_trimming.png",
+            "Bi-weekly Garden Plan" to "bi_weekly_garden_plan.png"
+        ).forEach { (name, file) ->
+            SubServiceEntity.find { SubServices.name eq name }.firstOrNull()?.apply {
+                imageUrl = "$baseUrl/$file"
+            }
+        }
+    }
+}
+
+
 

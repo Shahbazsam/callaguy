@@ -9,5 +9,7 @@ object Constants {
     const val EXTERNAL_PROFESSIONAL_PROFILE_PICTURE_PATH = "/professional_images"
     const val STATIC_SERVICE_PATH = "$STATIC_ROOT/services_images/"
     const val EXTERNAL_SERVICE_PATH = "/services_images"
+    const val STATIC_SUBSERVICE_PATH = "$STATIC_ROOT/subservices_images/"
+    const val EXTERNAL_SUBSERVICE_PATH = "/subservices_images"
 
 }

@@ -9,7 +9,7 @@ object Services : IntIdTable("services") {
     val name = varchar("name" , 100)
     val description = text("description")
     val isActive = bool("is_active").default(true)
-    val imageUrl = varchar("image_url" , 50).nullable()
+    val imageUrl = varchar("image_url" , 100).nullable()
 }
 
 

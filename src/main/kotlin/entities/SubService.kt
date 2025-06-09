@@ -12,7 +12,7 @@ object SubServices : IntIdTable("sub_services") {
     val visitCharge = decimal("visit_Charge" , 10 ,2)
     val isSubscription = bool("is_subscription").default(false)
     val subscriptionDuration = integer("subscription_duration").nullable()
-    val imageUrl = varchar("image_url" , 50).nullable()
+    val imageUrl = varchar("image_url" , 100).nullable()
 
 }
 

@@ -36,7 +36,8 @@ fun Application.module() {
     val profilePicture by inject<ProfilePictureService>()
     environment.monitor.subscribe(ApplicationStarted){
         //seedServicesAndSubServices()
-        setServiceImageUrls()
+        //setServiceImageUrls()
+        //setSubServiceImageUrls()
     }
 
     configureAuth(tokenConfig)

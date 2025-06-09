@@ -11,7 +11,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 object DatabaseFactory {
     fun init() {
 
-       // migrateDataBase()
+        // migrateDataBase()
 
        val config = HikariConfig().apply {
            jdbcUrl = "jdbc:postgresql://localhost:5432/CallAGuy"
