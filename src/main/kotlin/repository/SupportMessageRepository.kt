@@ -1,5 +1,6 @@
 package com.repository
 
+import com.dtos.response.supportMessage.SupportMessageResponseDto
 import com.entities.SupportMessageEntity
 import com.entities.SupportMessageSender
 import com.entities.SupportMessages
@@ -15,7 +16,7 @@ interface SupportMessageRepository {
         message : String
     ) : Boolean
 
-    suspend fun getMessageByTicketId(ticketId : Int) : List<SupportMessageEntity>?
+    suspend fun getMessageByTicketId(ticketId : Int) : List<SupportMessageResponseDto>?
 }
 
 class SupportMessageRepositoryImpl : SupportMessageRepository {
@@ -35,12 +36,19 @@ class SupportMessageRepositoryImpl : SupportMessageRepository {
         }
     }
 
-    override suspend fun getMessageByTicketId(ticketId: Int): List<SupportMessageEntity>? {
+    override suspend fun getMessageByTicketId(ticketId: Int): List<SupportMessageResponseDto>? {
         try {
             return transaction {
-                SupportMessageEntity.find{
+                SupportMessageEntity.find {
                     SupportMessages.ticket eq ticketId
-                }.toList()
+                }.map { response ->
+                    SupportMessageResponseDto(
+                        ticketId = response.ticket.id.value,
+                        sender = response.sender,
+                        message = response.message,
+                        createdAt = response.createdAt
+                    )
+                }
             }
         } catch (e : Exception) {
             throw AppException.InternalServerError()

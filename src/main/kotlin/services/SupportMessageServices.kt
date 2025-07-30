@@ -22,13 +22,6 @@ class SupportMessageServicesImpl(
     }
 
     override suspend fun getMessages(ticketId: Int): List<SupportMessageResponseDto>? {
-        return repository.getMessageByTicketId(ticketId = ticketId)?.map { response ->
-            SupportMessageResponseDto(
-                ticketId = response.ticket.id.value,
-                sender = response.sender,
-                message = response.message,
-                createdAt = response.createdAt
-            )
-        }
+        return repository.getMessageByTicketId(ticketId = ticketId)
     }
 }

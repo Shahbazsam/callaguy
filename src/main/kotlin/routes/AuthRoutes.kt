@@ -8,6 +8,9 @@ import com.exceptions.AppException
 import com.services.CustomerAuthService
 import com.services.ProfessionalAuthService
 import io.ktor.http.*
+import io.ktor.server.auth.authenticate
+import io.ktor.server.auth.jwt.JWTPrincipal
+import io.ktor.server.auth.principal
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -22,9 +25,9 @@ fun Route.customerAuthRoutes(
             val success = authService.registerCustomer(request)
             if (success) {
                 call.respond(
-                   status =  HttpStatusCode.OK ,
-                   message = "Registration Successful"
-                    )
+                    status = HttpStatusCode.OK,
+                    message = "Registration Successful"
+                )
             } else {
                 throw AppException.InternalServerError()
             }
@@ -39,13 +42,16 @@ fun Route.customerAuthRoutes(
                         token
                     )
                 )
-            } catch (e : AppException.UnauthorizedException) {
+            } catch (e: AppException.UnauthorizedException) {
                 call.respond(
                     status = HttpStatusCode.Unauthorized,
                     message = mapOf("code" to e.code, "message" to e.message)
                 )
-            }catch (e: Exception) {
-                call.respond(HttpStatusCode.InternalServerError, mapOf("code" to "INTERNAL_ERROR", "message" to "An unexpected error occurred"))
+            } catch (e: Exception) {
+                call.respond(
+                    HttpStatusCode.InternalServerError,
+                    mapOf("code" to "INTERNAL_ERROR", "message" to "An unexpected error occurred")
+                )
             }
         }
     }
@@ -70,25 +76,40 @@ fun Route.professionalAuthRoutes(
         post("/login") {
             val credentials = call.receive<LoginRequest>()
             try {
-               val token = authService.authenticate(credentials)
+                val token = authService.authenticate(credentials)
                 call.respond(
-                    status = HttpStatusCode.OK ,
+                    status = HttpStatusCode.OK,
                     message = AuthResponse(
                         token = token
                     )
                 )
-            }catch (e :AppException.UnauthorizedException) {
+            } catch (e: AppException.UnauthorizedException) {
                 call.respond(
                     status = HttpStatusCode.Unauthorized,
-                    message = mapOf("code" to e.code , "message" to e.message )
+                    message = mapOf("code" to e.code, "message" to e.message)
                 )
-            }catch (e : Exception) {
+            } catch (e: Exception) {
                 call.respond(
                     status = HttpStatusCode.InternalServerError,
                     message = mapOf("code" to "INTERNAL_ERROR", "message" to "An unexpected error occurred")
                 )
             }
         }
-    }
+        authenticate("auth_jwt") {
+            get("/is_approved") {
+                val principal = call.principal<JWTPrincipal>()
+                val id = principal?.getClaim("userId", Int::class)
+                val role = principal?.getClaim("role", String::class)
 
+                println("id : $id , role : $role")
+                if (id == null || role != "professional") {
+
+                    call.respond(HttpStatusCode.Forbidden, "Unauthorized")
+                    return@get
+                }
+                val isApproved = authService.isApproved(id)
+                call.respond(HttpStatusCode.OK, isApproved)
+            }
+        }
+    }
 }

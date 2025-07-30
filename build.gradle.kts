@@ -43,7 +43,6 @@ dependencies {
     testImplementation(libs.kotlin.test.junit)
 
     // Logging
-    implementation("ch.qos.logback:logback-classic:1.4.7")
     implementation("io.ktor:ktor-server-status-pages:3.1.1")
     //BCrypt
     implementation("org.mindrot:jbcrypt:0.4")

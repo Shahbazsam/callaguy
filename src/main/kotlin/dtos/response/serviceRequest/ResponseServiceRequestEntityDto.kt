@@ -2,7 +2,6 @@ package com.dtos.response.serviceRequest
 
 import com.entities.ServiceRequestStatus
 import com.utils.BigDecimalSerializer
-import io.ktor.network.sockets.*
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import java.math.BigDecimal
@@ -19,6 +18,7 @@ data class ResponseServiceRequestEntityDto(
     @Serializable(with = BigDecimalSerializer::class)
     val amount : BigDecimal,
     val subService : String ,
+    val image : String?,
     val subServiceId : Int ,
     val status : ServiceRequestStatus,
     @Contextual

@@ -35,7 +35,8 @@ fun Application.configureRouting(
         supportTicketRoutes(supportTicket)
         paymentRoutes(payment)
         customerProfilePicture(profile , customerAuthService)
-        professionalProfilePicture(profile)
+        professionalProfilePicture(profile ,professionalAuthService)
+        testImage()
 
     }
 }

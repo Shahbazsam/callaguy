@@ -9,53 +9,42 @@ import java.io.File
 import kotlin.text.substringAfterLast
 
 interface ProfilePictureRepository {
-    suspend fun updateCustomerProfilePicture(customerId : Int , imageUrl : String ) : Boolean
-    suspend fun updateProfessionalProfilePicture(professionalId : Int , imageUrl : String ) : Boolean
+    suspend fun updateCustomerProfilePicture(customerId: Int, imageUrl: String)
+    suspend fun updateProfessionalProfilePicture(professionalId: Int, imageUrl: String)
 }
 
 
 class ProfilePictureRepositoryImpl : ProfilePictureRepository {
-    override suspend fun updateCustomerProfilePicture(customerId: Int, imageUrl: String): Boolean {
-        return try {
-            transaction {
-                val customer = CustomerEntity.findById(customerId) ?: throw AppException.BadRequestException("User Not found")
+    override suspend fun updateCustomerProfilePicture(customerId: Int, imageUrl: String) {
+        return transaction {
+            val customer =
+                CustomerEntity.findById(customerId) ?: throw AppException.BadRequestException("User Not found")
 
-                val oldImageUrl = customer.profilePicture
-                if (!oldImageUrl.isNullOrBlank()) {
-                    val oldFileName = oldImageUrl.substringAfterLast("/")
-                    val file = File("${Constants.STATIC_CUSTOMER_PROFILE_PICTURE_PATH}/$oldFileName")
-                    if (file.exists()) {
-                        file.delete()
-                    }
+            val oldImageUrl = customer.profilePicture
+            if (!oldImageUrl.isNullOrBlank()) {
+                val oldFileName = oldImageUrl.substringAfterLast("/")
+                val file = File("${Constants.STATIC_CUSTOMER_PROFILE_PICTURE_PATH}/$oldFileName")
+                if (file.exists()) {
+                    file.delete()
                 }
-                customer.profilePicture = imageUrl
             }
-            true
-        }catch (e : Exception) {
-            e.printStackTrace()
-            false
+            customer.profilePicture = imageUrl
         }
     }
 
-    override suspend fun updateProfessionalProfilePicture(professionalId: Int, imageUrl: String): Boolean {
-        return try {
-            transaction {
-                val professional = ProfessionalEntity.findById(professionalId) ?: throw AppException.BadRequestException("User Not found")
-
-                val oldImageUrl =  professional.profilePicture
-                if (!oldImageUrl.isNullOrBlank()) {
-                    val oldFileName = oldImageUrl.substringAfterLast("/")
-                    val file = File("${Constants.STATIC_PROFESSIONAL_PROFILE_PICTURE_PATH}/$oldFileName")
-                    if (file.exists()) {
-                        file.delete()
-                    }
+    override suspend fun updateProfessionalProfilePicture(professionalId: Int, imageUrl: String) {
+        return transaction {
+            val professional =
+                ProfessionalEntity.findById(professionalId) ?: throw AppException.BadRequestException("User Not found")
+            val oldImageUrl = professional.profilePicture
+            if (!oldImageUrl.isNullOrBlank()) {
+                val oldFileName = oldImageUrl.substringAfterLast("/")
+                val file = File("${Constants.STATIC_PROFESSIONAL_PROFILE_PICTURE_PATH}/$oldFileName")
+                if (file.exists()) {
+                    file.delete()
                 }
-                professional.profilePicture = imageUrl
             }
-            true
-        }catch (e : Exception) {
-            e.printStackTrace()
-            false
+            professional.profilePicture = imageUrl
         }
     }
 }

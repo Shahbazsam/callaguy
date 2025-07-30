@@ -13,6 +13,7 @@ interface ServiceRequestService {
     suspend fun accept(professionalId: Int , requestId : Int) : Boolean
     suspend fun updateStatus(requestId: Int , newStatus : ServiceRequestStatus) : Boolean
     suspend fun getById(requestId : Int) : ResponseServiceRequestEntityDto?
+    suspend fun getAcceptedForProfessional(professionalId : Int) : List<ResponseServiceRequestEntityDto>?
 }
 
 class ServiceRequestServiceImpl(
@@ -35,22 +36,11 @@ class ServiceRequestServiceImpl(
     }
 
     override suspend fun getForProfessional(professionalId: Int): List<ResponseServiceRequestEntityDto>? {
-        return repository.getRequestedServiceRequestsForProfessional(professionalId)?.map { request ->
-            ResponseServiceRequestEntityDto(
-                id = request.id.value,
-                customerId = request.customer.id.value,
-                professionalId = request.professional?.id?.value ,
-                amount = request.subService.basePrice,
-                subService = request.subService.name,
-                subServiceId = request.subService.id.value,
-                status = request.status,
-                preferredDate = request.preferredDate,
-                preferredTime = request.preferredTime,
-                address = request.address,
-                specialInstructions = request.specialInstructions,
-                createdAt = request.createdAt
-            )
-        }
+        return repository.getRequestedServiceRequestsForProfessional(professionalId)
+    }
+
+    override suspend fun getAcceptedForProfessional(professionalId: Int): List<ResponseServiceRequestEntityDto>? {
+        return repository.getAcceptedForProfessional(professionalId = professionalId)
     }
 
     override suspend fun accept(professionalId: Int, requestId: Int): Boolean {
@@ -70,6 +60,7 @@ class ServiceRequestServiceImpl(
                 professionalId = request.professional?.id?.value ,
                 amount = request.subService.basePrice,
                 subService = request.subService.name,
+                image = request.subService.imageUrl,
                 subServiceId = request.subService.id.value,
                 status = request.status,
                 preferredDate = request.preferredDate,

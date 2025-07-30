@@ -12,9 +12,9 @@ object Professionals : IntIdTable("professionals") {
     val passwordHash = varchar("password_hash" , 255)
     val type = varchar("type" , 50).default("professional")
     val experience = integer("experience")
-    val documents = binary("documents")
+    val documents = binary("documents").nullable()
     val isApproved = bool("is_approved").default(false)
-    val profilePicture = varchar("profile_picture" , 50).nullable()
+    val profilePicture = varchar("profile_picture" , 255).nullable()
 }
 
 

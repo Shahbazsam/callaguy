@@ -1,7 +1,7 @@
 package com.utils
 
 import io.ktor.http.content.*
-import io.ktor.utils.io.jvm.javaio.toInputStream
+import io.ktor.utils.io.jvm.javaio.*
 import java.io.File
 import java.util.*
 
@@ -21,7 +21,7 @@ fun PartData.FileItem.save(path: String): String {
     // continue with creating our new file
     folder.mkdir()
     // write bytes to our newly created file
-    File("$path$fileName").writeBytes(fileBytes)
+    File("$path/$fileName").writeBytes(fileBytes)
 
     println(fileName)
     return fileName

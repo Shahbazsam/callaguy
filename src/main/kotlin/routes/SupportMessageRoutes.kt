@@ -43,5 +43,4 @@ fun Route.supportMessageRoutes(
             }
         }
     }
-
 }

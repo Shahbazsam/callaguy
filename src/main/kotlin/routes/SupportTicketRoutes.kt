@@ -36,7 +36,9 @@ fun Route.supportTicketRoutes(
                 val principal = call.principal<JWTPrincipal>()
                 val id = principal?.getClaim("userId" , Int::class)
                 val role  = principal?.getClaim("role" , String::class)
-                if (role != "customer" || id == null) throw AppException.ForbiddenException()
+                if (role != "customer" || id == null) throw AppException.UnauthorizedException("unauthorized")
+
+                println("customer Id : $id")
 
                 try {
                     val response = service.customersTickets(id) ?: emptyList()

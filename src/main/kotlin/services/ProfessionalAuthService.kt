@@ -2,6 +2,7 @@ package com.services
 
 import com.dtos.requests.auth.LoginRequest
 import com.dtos.requests.auth.ProfessionalRegisterRequest
+import com.dtos.response.profile.ProfessionalInfoDto
 import com.exceptions.AppException
 import com.repository.ProfessionalRepository
 import com.utils.JwtConfig
@@ -10,6 +11,8 @@ import com.utils.PasswordUtils
 interface ProfessionalAuthService {
     suspend fun registerProfessional(request : ProfessionalRegisterRequest) : Boolean
     suspend fun authenticate(credentials : LoginRequest) : String
+    suspend fun isApproved(professionalId : Int ) : Boolean
+    suspend fun profileInfo(professionalId : Int) : ProfessionalInfoDto
 }
 
 
@@ -28,9 +31,12 @@ class ProfessionalAuthServiceImpl(
             email = request.email,
             passwordHash = passwordUtils.hash(password = request.password),
             experience = request.experience,
-            documents = request.documents,
             serviceIds = request.serviceId,
         )
+    }
+
+    override suspend fun profileInfo(professionalId: Int): ProfessionalInfoDto {
+        return professionalRepository.profileInfo(professionalId)
     }
 
     override suspend fun authenticate(credentials: LoginRequest): String {
@@ -40,5 +46,9 @@ class ProfessionalAuthServiceImpl(
             throw AppException.UnauthorizedException("Invalid Credentials")
         }
         return jwtConfig.generateToken(userId = professional.id.value , role = professional.type)
+    }
+
+    override suspend fun isApproved(professionalId: Int): Boolean {
+        return professionalRepository.isApproved(professionalId)
     }
 }

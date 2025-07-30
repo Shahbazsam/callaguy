@@ -1,5 +1,6 @@
 package com.repository
 
+import com.dtos.response.supportTicket.SupportTicketResponse
 import com.entities.*
 import com.exceptions.AppException
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -13,7 +14,7 @@ interface SupportTicketRepository {
     ) : Boolean
     suspend fun updateTicketStatus(ticketId : Int , status : Boolean) : Boolean
     suspend fun getAllTicket(): List<SupportTicketEntity>?
-    suspend fun getAllTicketForCustomer(customerId : Int) : List<SupportTicketEntity>?
+    suspend fun getAllTicketForCustomer(customerId : Int) : List<SupportTicketResponse>?
 }
 
 class SupportTicketRepositoryImpl : SupportTicketRepository {
@@ -57,16 +58,25 @@ class SupportTicketRepositoryImpl : SupportTicketRepository {
         }
     }
 
-    override suspend fun getAllTicketForCustomer(customerId: Int): List<SupportTicketEntity>? {
+    override suspend fun getAllTicketForCustomer(customerId: Int): List<SupportTicketResponse>? {
         try {
             return transaction {
                 SupportTicketEntity.find {
                     SupportTickets.customer eq customerId
-                }.toList()
+                }.map { ticket ->
+                    SupportTicketResponse(
+                        ticketId = ticket.id.value,
+                        customerId = ticket.customer.id.value,
+                        serviceRequestId = ticket.serviceRequest.id.value,
+                        issueType = ticket.issueType,
+                        status = ticket.status,
+                        createdAt = ticket.createdAt
+                    )
+                }
             }
-        }catch (e : Exception) {
+        } catch (e: Exception) {
+            e.printStackTrace() // TEMP: log actual exception
             throw AppException.InternalServerError()
         }
-
     }
 }

@@ -18,7 +18,6 @@ data class ProfessionalRegisterRequest(
     val email : String,
     val password: String,
     val experience : Int,
-    val documents : ByteArray,
     val serviceId : List<Int>
 )
 
