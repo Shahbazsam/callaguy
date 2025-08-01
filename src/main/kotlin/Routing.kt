@@ -17,7 +17,8 @@ fun Application.configureRouting(
     supportMessage : SupportMessageServices,
     payment : PaymentService,
     profile : ProfilePictureService,
-    adminService : AdminService
+    adminService : AdminService,
+    approvalService: ApprovalService
 ) {
     routing {
         staticFiles(remotePath = Constants.EXTERNAL_CUSTOMER_PROFILE_PICTURE_PATH , dir = File(Constants.STATIC_CUSTOMER_PROFILE_PICTURE_PATH))
@@ -37,6 +38,7 @@ fun Application.configureRouting(
         customerProfilePicture(profile , customerAuthService)
         professionalProfilePicture(profile ,professionalAuthService)
         testImage()
+        adminProfessionalsPendingRoute(approvalService)
 
     }
 }

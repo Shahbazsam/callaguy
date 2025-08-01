@@ -42,6 +42,9 @@ class ProfessionalAuthServiceImpl(
     override suspend fun authenticate(credentials: LoginRequest): String {
         val professional = professionalRepository.findByEmail(credentials.email)
             ?: throw AppException.UnauthorizedException("Invalid Credentials")
+        println(professional.email)
+        println(professional.passwordHash)
+        println(credentials.password)
         if(!passwordUtils.verify(password = credentials.password  , hash = professional.passwordHash)) {
             throw AppException.UnauthorizedException("Invalid Credentials")
         }

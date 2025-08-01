@@ -35,7 +35,14 @@ fun Application.configureExceptionHandling() {
                 is AppException.NotFoundException -> call.respond(HttpStatusCode.NotFound , cause.toResponse())
                 is AppException.ConflictException -> call.respond(HttpStatusCode.Conflict , cause.toResponse())
                 is AppException.InternalServerError -> call.respond(HttpStatusCode.InternalServerError , cause.toResponse())
+                else -> call.respond(HttpStatusCode.InternalServerError , cause.toResponse())
             }
+        }
+        exception<Throwable> { call, cause ->
+            call.respond(
+                HttpStatusCode.InternalServerError,
+                mapOf("code" to "INTERNAL_ERROR", "message" to "Something went wrong")
+            )
         }
     }
 }

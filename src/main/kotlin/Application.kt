@@ -34,6 +34,7 @@ fun Application.module() {
     val supportMessage by inject<SupportMessageServices>()
     val payment by inject<PaymentService>()
     val profilePicture by inject<ProfilePictureService>()
+    val approvalService by inject<ApprovalService>()
     environment.monitor.subscribe(ApplicationStarted){
         //seedServicesAndSubServices()
         //setServiceImageUrls()
@@ -55,7 +56,8 @@ fun Application.module() {
         supportMessage = supportMessage,
         payment = payment,
         profile = profilePicture,
-        adminService = adminService
+        adminService = adminService,
+        approvalService = approvalService
     )
     configureMonitoring()
 
