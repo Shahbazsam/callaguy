@@ -22,11 +22,19 @@ Built with **Ktor**, **PostgreSQL**, **Exposed**, **JWT (HMAC256)**, and **Flywa
 
 ## 🛠 Tech Stack
 
-Kotlin • Ktor • PostgreSQL • Exposed ORM • Flyway • Kotlinx Serialization • JWT (HMAC256) • Gradle (Kotlin DSL)
+• Kotlin
+• Ktor
+• PostgreSQL 
+• Exposed ORM 
+• Flyway 
+• Kotlinx Serialization 
+• JWT (HMAC256) 
+• Gradle (Kotlin DSL)
 
 ---
 
 ## 🏗 Architecture (high-level)
+
 
 Ktor Routing
 ├─ Auth (admin/customer/professional)
@@ -125,7 +133,7 @@ Configure connection via env or application.conf.
 
 ---
 
-##📌 Future Plans
+📌 Future Plans
 
 Push notifications (server-driven)
 
