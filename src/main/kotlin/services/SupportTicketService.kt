@@ -6,16 +6,16 @@ import com.dtos.response.supportTicket.SupportTicketResponse
 import com.repository.SupportTicketRepository
 
 interface SupportTicketService {
-    suspend fun createTicket(customerId : Int , request : SupportTicketRequestDto) : Boolean
-    suspend fun updateTicketStatus(request : UpdateTicketStatusRequestDto) : Boolean
-    suspend fun allTicket(): List<SupportTicketResponse>?
+    suspend fun createTicket(customerId : Int , request : SupportTicketRequestDto) : Unit
+    suspend fun updateTicketStatus(request : UpdateTicketStatusRequestDto) : Unit
+    suspend fun allTicket(): List<SupportTicketResponse>
     suspend fun customersTickets(customerId : Int) : List<SupportTicketResponse>?
 }
 
 class SupportTicketServiceImpl(
     private val repository: SupportTicketRepository
 ) : SupportTicketService {
-    override suspend fun createTicket(customerId: Int, request: SupportTicketRequestDto): Boolean {
+    override suspend fun createTicket(customerId: Int, request: SupportTicketRequestDto): Unit {
         return repository.createTicket(
             customerId = customerId,
             serviceRequestId = request.serviceRequestId,
@@ -23,24 +23,15 @@ class SupportTicketServiceImpl(
         )
     }
 
-    override suspend fun updateTicketStatus(request: UpdateTicketStatusRequestDto): Boolean {
+    override suspend fun updateTicketStatus(request: UpdateTicketStatusRequestDto): Unit {
         return repository.updateTicketStatus(
             ticketId = request.ticketId,
             status = request.status
         )
     }
 
-    override suspend fun allTicket(): List<SupportTicketResponse>? {
-        return repository.getAllTicket()?.map { ticket ->
-            SupportTicketResponse(
-                ticketId = ticket.id.value,
-                customerId = ticket.customer.id.value,
-                serviceRequestId = ticket.serviceRequest.id.value,
-                issueType = ticket.issueType,
-                status = ticket.status,
-                createdAt = ticket.createdAt
-            )
-        }
+    override suspend fun allTicket(): List<SupportTicketResponse> {
+        return repository.getAllTicket()
     }
 
     override suspend fun customersTickets(customerId: Int): List<SupportTicketResponse>? {

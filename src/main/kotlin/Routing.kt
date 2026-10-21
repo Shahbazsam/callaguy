@@ -25,6 +25,7 @@ fun Application.configureRouting(
         staticFiles(remotePath = Constants.EXTERNAL_PROFESSIONAL_PROFILE_PICTURE_PATH , dir = File(Constants.STATIC_PROFESSIONAL_PROFILE_PICTURE_PATH))
         staticFiles(remotePath = Constants.EXTERNAL_SERVICE_PATH , dir = File(Constants.STATIC_SERVICE_PATH))
         staticFiles(remotePath = Constants.EXTERNAL_SUBSERVICE_PATH , dir = File(Constants.STATIC_SUBSERVICE_PATH))
+        staticFiles(remotePath = Constants.EXTERNAL_PROFESSIONAL_CV_PATH , dir = File(Constants.STATIC_PROFESSIONAL_CV_PATH))
 
         customerAuthRoutes(customerAuthService)
         professionalAuthRoutes(professionalAuthService)

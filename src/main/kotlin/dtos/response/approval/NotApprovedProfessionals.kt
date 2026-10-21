@@ -9,6 +9,7 @@ data class NotApprovedProfessionals(
     val email : String,
     val experience : Int,
     val isApproved : Boolean,
+    val documents : String?,
     val profilePicture : String?,
     val services : List<String>
 )

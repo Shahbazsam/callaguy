@@ -24,6 +24,7 @@ object DatabaseFactory {
        }
         Database.connect(HikariDataSource(config))
 
+
         /*transaction {
             SchemaUtils.createMissingTablesAndColumns(
                 Customers,

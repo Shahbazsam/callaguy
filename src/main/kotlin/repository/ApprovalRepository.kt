@@ -27,6 +27,7 @@ class ApprovalRepositoryImpl() : ApprovalRepository {
                     email = professional.email,
                     experience = professional.experience,
                     isApproved = professional.isApproved,
+                    documents = professional.documents,
                     profilePicture = professional.profilePicture,
                     services = professional.services.map {
                         it.name

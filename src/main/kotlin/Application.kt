@@ -9,6 +9,7 @@ import com.utils.JwtConfig
 import io.ktor.server.application.*
 import org.koin.ktor.ext.inject
 import org.koin.ktor.plugin.Koin
+import org.mindrot.jbcrypt.BCrypt
 
 fun main(args: Array<String>) {
     io.ktor.server.netty.EngineMain.main(args)
@@ -39,6 +40,11 @@ fun Application.module() {
         //seedServicesAndSubServices()
         //setServiceImageUrls()
         //setSubServiceImageUrls()
+        //setCv()
+        val plainPassword = "admin12345"
+        val hash = BCrypt.hashpw(plainPassword, BCrypt.gensalt(12))
+
+        println(hash)
     }
 
     configureAuth(tokenConfig)
@@ -60,6 +66,4 @@ fun Application.module() {
         approvalService = approvalService
     )
     configureMonitoring()
-
-
 }

@@ -1,5 +1,7 @@
 package com
 
+import com.entities.ProfessionalEntity
+import com.entities.Professionals
 import com.entities.ServiceEntity
 import com.entities.Services
 import com.entities.SubServiceEntity
@@ -354,8 +356,16 @@ fun seedServicesAndSubServices() {
     }
 }
 
+fun setCv(baseUrl: String = "http://172.20.10.13:8081/professional_cv") {
+    transaction {
+        ProfessionalEntity.find { Professionals.username eq "testProfessional" }.firstOrNull()?.apply {
+            documents = "$baseUrl/cv.pdf"
+        }
+    }
+}
 
-fun setServiceImageUrls(baseUrl: String = "http://10.20.6.60:8081/services_images") {
+
+fun setServiceImageUrls(baseUrl: String = "http://172.20.10.13:8081/services_images") {
     transaction {
         ServiceEntity.find { Services.name eq "Cleaning" }.firstOrNull()?.apply {
             imageUrl = "$baseUrl/cleaning.png"
@@ -399,7 +409,7 @@ fun setServiceImageUrls(baseUrl: String = "http://10.20.6.60:8081/services_image
     }
 }
 
-fun setSubServiceImageUrls(baseUrl: String = "http://10.20.6.60:8081/subservices_images") {
+fun setSubServiceImageUrls(baseUrl: String = "http://172.20.10.13:8081/subservices_images") {
     transaction {
         mapOf(
             "Basic Home Cleaning" to "basic_home_cleaning.png",

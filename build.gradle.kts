@@ -52,4 +52,18 @@ dependencies {
 
     implementation("io.ktor:ktor-server-call-logging:3.1.1")
 
+    testImplementation("io.mockk:mockk:1.13.12")
+    testImplementation("com.google.truth:truth:1.4.4")
+
+
+    testImplementation("org.testcontainers:postgresql:1.20.2")
+
+}
+tasks.test {
+    useJUnit()
+    testLogging {
+        events("passed", "skipped", "failed")
+        exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+        showStandardStreams = true
+    }
 }

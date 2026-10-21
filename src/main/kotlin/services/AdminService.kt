@@ -28,8 +28,14 @@ class AdminServiceImpl(
     }
 
     override suspend fun Authenticate(credentials: LoginRequest): String {
+        println("Login email received: '${credentials.email}'")
+        println("Login password received: '${credentials.password}'")
         val admin = repository.findByEmail(credentials.email)
             ?: throw AppException.UnauthorizedException("Invalid Credentials")
+        println("Admin found: ${admin != null}")
+
+        println("Stored hash: '${admin.passwordHash}'")
+        println("Password matches: ${passwordUtil.verify(credentials.password, admin.passwordHash)}")
 
         if (!passwordUtil.verify(password = credentials.password , hash = admin.passwordHash)) {
             throw AppException.UnauthorizedException("Invalid Credentials")

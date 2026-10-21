@@ -5,27 +5,22 @@ import com.dtos.requests.auth.LoginRequest
 import com.dtos.response.auth.AuthResponse
 import com.exceptions.AppException
 import com.services.AdminService
-import io.ktor.http.HttpStatusCode
-import io.ktor.server.request.receive
-import io.ktor.server.response.respond
-import io.ktor.server.routing.Route
-import io.ktor.server.routing.post
-import io.ktor.server.routing.route
+import io.ktor.http.*
+import io.ktor.server.request.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 
 fun Route.adminAuthRoutes(
-    service : AdminService
+    service: AdminService
 ) {
     route("/admin_auth") {
         post("/register") {
             val request = call.receive<AdminRegisterRequestDto>()
-            val success = service.registerAdmin(request)
-            if (success) {
-                call.respond(
-                    HttpStatusCode.OK , "Registration Successful"
-                )
-            } else {
-                throw AppException.InternalServerError()
-            }
+            service.registerAdmin(request)
+            call.respond(
+                HttpStatusCode.OK, "Registration Successful"
+            )
+
         }
         post("/login") {
             val credentials = call.receive<LoginRequest>()
@@ -37,13 +32,16 @@ fun Route.adminAuthRoutes(
                         token = token
                     )
                 )
-            }catch (e : AppException.UnauthorizedException) {
+            } catch (e: AppException.UnauthorizedException) {
                 call.respond(
                     status = HttpStatusCode.Unauthorized,
                     message = mapOf("code" to e.code, "message" to e.message)
                 )
-            }catch (e: Exception) {
-                call.respond(HttpStatusCode.InternalServerError, mapOf("code" to "INTERNAL_ERROR", "message" to "An unexpected error occurred"))
+            } catch (e: Exception) {
+                call.respond(
+                    HttpStatusCode.InternalServerError,
+                    mapOf("code" to "INTERNAL_ERROR", "message" to "An unexpected error occurred")
+                )
             }
         }
     }
